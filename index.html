@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kronos · Panel de Capital</title>
-<meta name="description" content="Panel personal de crecimiento de capital de trading.">
+<meta name="description" content="Panel personal de crecimiento de capital de trading: seguimiento, interés compuesto y conversor a EUR.">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🪐</text></svg>">
 </head>
@@ -185,9 +185,67 @@
 </section>
 
 <section class="panel-group hidden" id="tab-conversor" role="tabpanel">
-  <div class="card">
-    <h2>Conversor de monedas a EUR</h2>
-    <p class="empty">Sección en construcción.</p>
+  <div class="grid grid--2">
+    <div class="card">
+      <h2>Convertir a EUR</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Cantidad</span>
+          <input type="number" id="fx-cantidad" step="any" value="100000">
+        </label>
+        <label class="field">
+          <span>Moneda de origen</span>
+          <select id="fx-moneda"></select>
+        </label>
+      </div>
+
+      <div class="result">
+        <span class="result__label">Resultado</span>
+        <strong id="fx-resultado">—</strong>
+        <span class="result__sub" id="fx-detalle">—</span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn--primary" id="fx-actualizar">Actualizar tasas</button>
+        <button class="btn" id="fx-invertir">Invertir (EUR → moneda)</button>
+      </div>
+      <p class="hint" id="fx-estado" role="status">Cargando tasas…</p>
+    </div>
+
+    <div class="card">
+      <h2>Configuración de tasas</h2>
+      <label class="field">
+        <span>Endpoint de la API (base EUR)</span>
+        <input type="text" id="fx-endpoint" value="https://open.er-api.com/v6/latest/EUR">
+      </label>
+      <label class="field">
+        <span>API key (opcional, se inserta como <code>{key}</code> en la URL)</span>
+        <input type="text" id="fx-key" placeholder="vacío = API sin key">
+      </label>
+
+      <h2 class="mt">Tasa manual (respaldo sin internet)</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Moneda</span>
+          <input type="text" id="fx-man-cod" maxlength="6" placeholder="COP" style="text-transform:uppercase">
+        </label>
+        <label class="field">
+          <span>Unidades por 1 EUR</span>
+          <input type="number" id="fx-man-val" step="any" placeholder="4300">
+        </label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn--primary" id="fx-man-guardar">Guardar / agregar moneda</button>
+        <button class="btn btn--danger" id="fx-man-borrar">Borrar tasas manuales</button>
+      </div>
+
+      <div class="table-wrap mt">
+        <table id="tabla-fx">
+          <thead><tr><th>Moneda</th><th>Por 1 EUR</th><th>Origen</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -202,6 +260,7 @@
 <script src="js/storage.js"></script>
 <script src="js/growth.js"></script>
 <script src="js/compound.js"></script>
+<script src="js/fx.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

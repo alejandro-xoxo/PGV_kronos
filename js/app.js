@@ -30,6 +30,7 @@
 
   Growth.init();
   Compound.init();
+  FX.init();
 
   const inicial = location.hash.slice(1) || Store.get('tab', 'crecimiento');
   mostrar(paneles[inicial] ? inicial : 'crecimiento');
