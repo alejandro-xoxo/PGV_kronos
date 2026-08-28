@@ -107,6 +107,50 @@
     el._t = setTimeout(function () { el.textContent = ''; el.className = 'hint'; }, 4000);
   }
 
+  /* ---- utilidades de calendario ----
+     Todas las fechas se manejan como cadenas ISO 'YYYY-MM-DD' y se construyen
+     con el constructor local Date(y, m-1, d) para evitar el desfase de zona
+     horaria que produce new Date('2026-08-28') (que se interpreta como UTC). */
+
+  function isoADate(iso) {
+    const p = String(iso).split('-');
+    return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  }
+
+  function dateAIso(d) {
+    const p = function (x) { return String(x).padStart(2, '0'); };
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  function sumarDias(iso, n) {
+    const d = isoADate(iso);
+    d.setDate(d.getDate() + n);
+    return dateAIso(d);
+  }
+
+  /* Días calendario completos entre dos fechas ISO (b - a). */
+  function diffDias(a, b) {
+    const MS = 86400000;
+    return Math.round((isoADate(b).getTime() - isoADate(a).getTime()) / MS);
+  }
+
+  /* Índice de día de la semana con lunes = 0 … domingo = 6
+     (getDay() nativo usa domingo = 0). */
+  function diaSemana(iso) {
+    return (isoADate(iso).getDay() + 6) % 7;
+  }
+
+  const NOMBRES_DIA = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+  window.Cal = {
+    isoADate: isoADate,
+    dateAIso: dateAIso,
+    sumarDias: sumarDias,
+    diffDias: diffDias,
+    diaSemana: diaSemana,
+    NOMBRES_DIA: NOMBRES_DIA
+  };
+
   window.Store = Store;
   window.Fmt = Fmt;
   window.exportCSV = exportCSV;

@@ -1,19 +1,26 @@
-/* Sección 1 — Crecimiento porcentual del capital.
-   Los registros se guardan como {id, fecha, tipo, valor, nota} y la cadena de
-   capitales se recalcula al vuelo, de modo que cambiar el capital inicial
-   reajusta correctamente los registros introducidos como porcentaje. */
+/* Sección 1 — Crecimiento del capital + contador de días del plan.
+   Los registros se guardan como {id, fecha, tipo, valor, operable, nota} y la
+   cadena de capitales se recalcula al vuelo, de modo que cambiar el capital
+   inicial reajusta correctamente los registros introducidos como porcentaje.
+
+   Días operables: un registro marcado como no operable representa un día en
+   que no se operó (fin de semana, feriado, decisión propia). Se mantiene en
+   el historial —el capital de ese día sigue siendo el mismo— pero no cuenta
+   para la media por día operable ni se dibuja como día operado. */
 (function () {
   const $ = function (id) { return document.getElementById(id); };
 
   const state = {
+    inicio: Store.get('inicio', hoyISO()),
     inicial: Store.get('inicial', 1000),
     moneda: Store.get('moneda', 'EUR'),
-    registros: Store.get('registros', [])   // [{id, fecha, tipo:'capital'|'pct', valor, nota}]
+    registros: Store.get('registros', [])
   };
 
   let chart = null;
 
   function guardar() {
+    Store.set('inicio', state.inicio);
     Store.set('inicial', state.inicial);
     Store.set('moneda', state.moneda);
     Store.set('registros', state.registros);
@@ -28,19 +35,57 @@
     });
 
     let prev = base;
+    let nOp = 0;
     return orden.map(function (r) {
+      const operable = r.operable !== false;
+      // En un día no operable el capital no se mueve, salvo que se haya
+      // registrado explícitamente un capital distinto (p. ej. un ingreso).
       const capital = r.tipo === 'pct'
         ? prev * (1 + (Number(r.valor) || 0) / 100)
         : (Number(r.valor) || 0);
       const delta = capital - prev;
       const pctPeriodo = prev !== 0 ? (delta / prev) * 100 : 0;
       const pctAcum = base !== 0 ? ((capital - base) / base) * 100 : 0;
+      if (operable) nOp++;
       prev = capital;
       return {
-        id: r.id, fecha: r.fecha, nota: r.nota || '',
-        capital: capital, delta: delta, pctPeriodo: pctPeriodo, pctAcum: pctAcum
+        id: r.id, fecha: r.fecha, nota: r.nota || '', operable: operable,
+        diaPlan: Cal.diffDias(state.inicio, r.fecha) + 1,
+        capital: capital, delta: delta,
+        pctPeriodo: pctPeriodo, pctAcum: pctAcum,
+        opAcum: nOp
       };
     });
+  }
+
+  function pintarContador(filas) {
+    const hoy = hoyISO();
+    const transcurridos = Cal.diffDias(state.inicio, hoy);   // puede ser negativo
+    const diaPlan = transcurridos + 1;
+
+    $('d-dia').textContent = diaPlan >= 1
+      ? 'Día ' + diaPlan + ' desde el inicio'
+      : 'El plan empieza en ' + Math.abs(transcurridos) + ' día(s)';
+
+    $('d-desde').textContent = 'Inicio: ' + Fmt.fecha(state.inicio) +
+      ' · Hoy: ' + Fmt.fecha(hoy);
+
+    const calendario = Math.max(transcurridos, 0);
+    const operables = filas.filter(function (f) { return f.operable; }).length;
+    const noOperables = filas.length - operables;
+
+    $('d-calendario').textContent = calendario;
+    $('d-operables').textContent = operables;
+    $('d-no-operables').textContent = noOperables;
+
+    // Días del calendario transcurridos que aún no tienen ningún registro.
+    const conRegistro = {};
+    filas.forEach(function (f) { conRegistro[f.fecha] = 1; });
+    let sin = 0;
+    for (let i = 1; i <= calendario; i++) {
+      if (!conRegistro[Cal.sumarDias(state.inicio, i)]) sin++;
+    }
+    $('d-sin-registro').textContent = sin;
   }
 
   function pintarKPIs(filas) {
@@ -62,20 +107,21 @@
     p.textContent = Fmt.pct(pct);
     p.className = Fmt.signClass(pct);
 
-    const u = $('k-ultimo');
-    u.textContent = ultimo ? Fmt.pct(ultimo.pctPeriodo) : '—';
-    u.className = ultimo ? Fmt.signClass(ultimo.pctPeriodo) : '';
+    // Media geométrica: (capital_final / capital_base)^(1/n) - 1
+    const media = function (n) {
+      if (!n || base <= 0 || actual <= 0) return null;
+      return (Math.pow(actual / base, 1 / n) - 1) * 100;
+    };
+    const setMedia = function (id, v) {
+      const el = $(id);
+      el.textContent = v == null ? '—' : Fmt.pct(v, 3);
+      el.className = v == null ? '' : Fmt.signClass(v);
+    };
 
-    // media geométrica por registro: (1+r)^(1/n) - 1
-    const med = $('k-media');
-    if (filas.length && base > 0 && actual > 0) {
-      const g2 = (Math.pow(actual / base, 1 / filas.length) - 1) * 100;
-      med.textContent = Fmt.pct(g2);
-      med.className = Fmt.signClass(g2);
-    } else {
-      med.textContent = '—';
-      med.className = '';
-    }
+    const calendario = Math.max(Cal.diffDias(state.inicio, hoyISO()), 0);
+    const operables = filas.filter(function (f) { return f.operable; }).length;
+    setMedia('k-media-cal', media(calendario));
+    setMedia('k-media-op', media(operables));
   }
 
   function pintarTabla(filas) {
@@ -87,6 +133,7 @@
     const m = state.moneda;
     filas.forEach(function (f) {
       const tr = document.createElement('tr');
+      if (!f.operable) tr.className = 'row-noop';
 
       const c = function (txt, cls) {
         const td = document.createElement('td');
@@ -95,7 +142,9 @@
         tr.appendChild(td);
       };
 
-      c(Fmt.fecha(f.fecha));
+      c(Fmt.fecha(f.fecha) + ' · ' + Cal.NOMBRES_DIA[Cal.diaSemana(f.fecha)]);
+      c(f.diaPlan >= 1 ? 'D' + f.diaPlan : '—');
+      c(f.operable ? 'Sí' : 'No', f.operable ? 'pos' : 'dim');
       c(Fmt.money(f.capital, m));
       c(Fmt.money(f.delta, m), Fmt.signClass(f.delta));
       c(Fmt.pct(f.pctPeriodo), Fmt.signClass(f.pctPeriodo));
@@ -121,21 +170,34 @@
     if (!chart) chart = new LineChart($('chart-crecimiento'));
     const base = Number(state.inicial) || 0;
     const m = state.moneda;
+
+    // El punto 0 es el inicio del plan; a partir de ahí, un punto por registro
+    // coloreado según si ese día fue operable o no.
     chart.render({
       labels: ['Inicio'].concat(filas.map(function (f) { return Fmt.fechaCorta(f.fecha); })),
       format: function (v) { return Fmt.money(v, m); },
+      extra: function (i) {
+        if (i === 0) return 'Inicio del plan';
+        const f = filas[i - 1];
+        return (f.operable ? '● Día operado' : '○ No operable') +
+          (f.diaPlan >= 1 ? ' · Día ' + f.diaPlan : '');
+      },
       series: [{
         name: 'Capital',
         color: '#3ce0ff',
         fill: true,
         baseline: base,
-        values: [base].concat(filas.map(function (f) { return f.capital; }))
+        values: [base].concat(filas.map(function (f) { return f.capital; })),
+        pointColors: ['#a06bff'].concat(filas.map(function (f) {
+          return f.operable ? '#3ce0ff' : '#93a2c8';
+        }))
       }]
     });
   }
 
   function render() {
     const filas = calcular();
+    pintarContador(filas);
     pintarKPIs(filas);
     pintarTabla(filas);
     pintarGrafico(filas);
@@ -169,11 +231,15 @@
       fecha: fecha,
       tipo: tipo,
       valor: valor,
+      operable: $('reg-operable').checked,
       nota: $('reg-nota').value.trim()
     });
     guardar();
     render();
 
+    // Prepara el formulario para el día siguiente.
+    $('reg-fecha').value = Cal.sumarDias(fecha, 1);
+    autoOperable();
     $('reg-valor').value = '';
     $('reg-nota').value = '';
     flash(msg, 'Registro agregado.', 'ok');
@@ -187,21 +253,28 @@
     }
     exportCSV(
       'kronos-crecimiento.csv',
-      ['Fecha', 'Capital', 'Delta periodo', '% periodo', '% acumulado', 'Nota'],
+      ['Fecha', 'Dia semana', 'Dia del plan', 'Operable', 'Capital',
+       'Delta periodo', '% periodo', '% acumulado', 'Dias operables acum.', 'Nota'],
       filas.map(function (f) {
-        return [f.fecha, f.capital.toFixed(2), f.delta.toFixed(2),
-                f.pctPeriodo.toFixed(4), f.pctAcum.toFixed(4), f.nota];
+        return [f.fecha, Cal.NOMBRES_DIA[Cal.diaSemana(f.fecha)], f.diaPlan,
+                f.operable ? 'Si' : 'No', f.capital.toFixed(2), f.delta.toFixed(2),
+                f.pctPeriodo.toFixed(4), f.pctAcum.toFixed(4), f.opAcum, f.nota];
       })
     );
   }
 
   function resetear() {
-    if (!confirm('¿Borrar el capital inicial y todos los registros de crecimiento? Esta acción no se puede deshacer.')) return;
+    if (!confirm('¿Borrar la configuración del plan y todos los registros de crecimiento? Esta acción no se puede deshacer.')) return;
     state.registros = [];
     state.inicial = 1000;
+    state.inicio = hoyISO();
     Store.remove('registros');
     Store.remove('inicial');
+    Store.remove('inicio');
     $('capital-inicial').value = state.inicial;
+    $('fecha-inicio').value = state.inicio;
+    $('reg-fecha').value = state.inicio;
+    autoOperable();
     render();
     flash($('msg-crecimiento'), 'Datos reseteados.', 'ok');
   }
@@ -209,15 +282,35 @@
   function actualizarEtiquetaValor() {
     const tipo = $('reg-tipo').value;
     $('reg-valor-label').textContent = tipo === 'pct' ? '% ganancia/pérdida del día' : 'Capital del día';
-    $('reg-valor').placeholder = tipo === 'pct' ? '1.5' : '1010';
+    $('reg-valor').placeholder = tipo === 'pct' ? '4' : '1040';
+  }
+
+  /* Sugiere "no operable" cuando la fecha elegida cae en sábado o domingo. */
+  function autoOperable() {
+    const f = $('reg-fecha').value;
+    if (!f) return;
+    $('reg-operable').checked = Cal.diaSemana(f) < 5;
   }
 
   function init() {
+    // Primera configuración: fecha de inicio por defecto = hoy.
+    $('fecha-inicio').value = state.inicio;
     $('capital-inicial').value = state.inicial;
     $('moneda-display').value = state.moneda;
-    $('reg-fecha').value = hoyISO();
+
+    // El formulario arranca en el primer día sin registrar del plan.
+    const ultimo = state.registros.reduce(function (max, r) {
+      return !max || r.fecha > max ? r.fecha : max;
+    }, null);
+    $('reg-fecha').value = ultimo ? Cal.sumarDias(ultimo, 1) : state.inicio;
+    autoOperable();
     actualizarEtiquetaValor();
 
+    $('fecha-inicio').addEventListener('change', function () {
+      state.inicio = this.value || hoyISO();
+      guardar();
+      render();
+    });
     $('capital-inicial').addEventListener('input', function () {
       state.inicial = Number(this.value) || 0;
       guardar();
@@ -227,8 +320,10 @@
       state.moneda = this.value;
       guardar();
       render();
+      Compound.run();   // la simulación usa la misma moneda
     });
     $('reg-tipo').addEventListener('change', actualizarEtiquetaValor);
+    $('reg-fecha').addEventListener('change', autoOperable);
     $('reg-valor').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') agregar();
     });
