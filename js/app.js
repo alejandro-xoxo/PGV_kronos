@@ -21,6 +21,7 @@
 
     // Los canvas ocultos miden 0 px: hay que redibujar al mostrarlos.
     if (nombre === 'crecimiento') Growth.render();
+    if (nombre === 'compuesto') Compound.run();
   }
 
   tabs.forEach(function (t) {
@@ -28,6 +29,7 @@
   });
 
   Growth.init();
+  Compound.init();
 
   const inicial = location.hash.slice(1) || Store.get('tab', 'crecimiento');
   mostrar(paneles[inicial] ? inicial : 'crecimiento');
