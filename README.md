@@ -308,42 +308,9 @@ ni configuración de Jekyll ni archivo `.nojekyll`.
 
 ---
 
-## 🗺️ Hoja de Ruta: Integración Futura con `Kronos_Bot` (Docker + Ngrok)
+## 🔗 Proyectos Relacionados y Documentación Interna
 
-> **Trabajo relacionado → [Kronos_Bot (GitHub)](https://github.com/alejandro-xoxo/Kronos_Bot.git)** — Bot de ejecución automática de señales de Telegram a MT4 con backend en Python/Flask, n8n, PostgreSQL, Caddy y Ngrok.
+- **[Documentación de Integración Futura](docs/INTEGRACION_KRONOS_BOT.md)**: Plan técnico de arquitectura para la futura integración con backend PostgreSQL y motor de trading.
+- **[Kronos_Bot (GitHub)](https://github.com/alejandro-xoxo/Kronos_Bot.git)**: Bot personal de trading automatizado de Telegram a MT4 con n8n y Python.
 
-Actualmente, **PVG_kronos** se mantiene como un proyecto frontend independiente y estático publicado en GitHub Pages. En el futuro se planea su integración con el backend de [Kronos_Bot](https://github.com/alejandro-xoxo/Kronos_Bot.git) para reemplazar la interfaz antigua del dashboard y sincronizar automáticamente las operaciones desde celular o PC.
-
-### Arquitectura Planificada de Fusión
-
-```
-[ Celular / PC remoto ]
-          │ (HTTPS vía Ngrok + HTTP Basic Auth)
-          ▼
-   [ Proxy Caddy / Docker ] ── (Puerto 8088)
-          │
-          ▼
-   [ Kronos_Bot Backend (Flask) ]
-          │
-   ┌──────┴─────────────────────────┐
-   ▼                                ▼
-[ PostgreSQL (Base de datos) ]   [ MT4 Bridge (status.json) ]
-```
-
-### Pasos de Implementación Futura
-
-1. **Reemplazo del Frontend (`Kronos_Bot/dashboard/static`)**:
-   - Copiar los recursos de `PVG_kronos` (`index.html`, `styles.css`, `assets/`, `js/`) al directorio `/dashboard/static` de `Kronos_Bot`.
-
-2. **Adaptación de Persistencia Híbrida en `storage.js`**:
-   - Configurar `storage.js` para detectar si existe un backend activo en `/api/registros`.
-   - Si la API responde, sincronizar `GET` y `POST` con PostgreSQL; si no (ej. en GitHub Pages), mantener `localStorage` como fallback local.
-
-3. **Endpoints a expender en `Kronos_Bot/dashboard/main.py`**:
-   - `GET /api/registros`: Retorna el historial de operaciones desde PostgreSQL.
-   - `POST /api/registros`: Guarda un nuevo registro operado.
-   - `GET /api/status`: Provee las posiciones abiertas reales directamente leídas desde MetaTrader 4.
-
-4. **Sincronización Multi-dispositivo en tiempo real**:
-   - Al conectarse desde el celular o cualquier computadora vía la URL pública de Ngrok (protegida por Basic Auth), cualquier cambio introducido se guardará en PostgreSQL y se reflejará inmediatamente en todos los dispositivos conectados.
 
