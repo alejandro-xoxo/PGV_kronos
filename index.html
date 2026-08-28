@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kronos · Panel de Capital</title>
-<meta name="description" content="Panel personal de crecimiento de capital de trading: seguimiento, interés compuesto y conversor a EUR.">
+<meta name="description" content="Panel personal de crecimiento de capital de trading: seguimiento por días operables, interés compuesto y conversor a EUR.">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🪐</text></svg>">
 </head>
@@ -32,24 +32,46 @@
 
 <main>
 
+<!-- ===================== CRECIMIENTO ===================== -->
 <section class="panel-group" id="tab-crecimiento" role="tabpanel">
+
+  <!-- Contador de días del plan -->
+  <div class="dayband">
+    <div class="dayband__main">
+      <span class="dayband__label">En qué día del plan estamos</span>
+      <strong id="d-dia">Día 1 desde el inicio</strong>
+      <span class="dayband__sub" id="d-desde">—</span>
+    </div>
+    <div class="dayband__stats">
+      <div><span>Días calendario</span><strong id="d-calendario">0</strong></div>
+      <div><span>Días operables</span><strong id="d-operables" class="pos">0</strong></div>
+      <div><span>Días no operables</span><strong id="d-no-operables">0</strong></div>
+      <div><span>Días sin registrar</span><strong id="d-sin-registro">0</strong></div>
+    </div>
+  </div>
 
   <div class="kpis">
     <div class="kpi"><span class="kpi__label">Capital inicial</span><strong id="k-inicial">—</strong></div>
     <div class="kpi"><span class="kpi__label">Capital actual</span><strong id="k-actual">—</strong></div>
     <div class="kpi"><span class="kpi__label">Ganancia total</span><strong id="k-ganancia">—</strong></div>
     <div class="kpi"><span class="kpi__label">Crecimiento acumulado</span><strong id="k-pct">—</strong></div>
-    <div class="kpi"><span class="kpi__label">Último período</span><strong id="k-ultimo">—</strong></div>
-    <div class="kpi"><span class="kpi__label">Media por registro</span><strong id="k-media">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Media / día calendario</span><strong id="k-media-cal">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Media / día operable</span><strong id="k-media-op">—</strong></div>
   </div>
 
   <div class="grid grid--2">
     <div class="card">
-      <h2>Configuración</h2>
-      <label class="field">
-        <span>Capital inicial</span>
-        <input type="number" id="capital-inicial" step="any" min="0" placeholder="1000">
-      </label>
+      <h2>Configuración del plan</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Fecha de inicio</span>
+          <input type="date" id="fecha-inicio">
+        </label>
+        <label class="field">
+          <span>Capital inicial</span>
+          <input type="number" id="capital-inicial" step="any" min="0" placeholder="1000">
+        </label>
+      </div>
       <label class="field">
         <span>Moneda de visualización</span>
         <select id="moneda-display">
@@ -77,6 +99,10 @@
         <span id="reg-valor-label">Capital del día</span>
         <input type="number" id="reg-valor" step="any" placeholder="1010">
       </label>
+      <label class="check">
+        <input type="checkbox" id="reg-operable" checked>
+        <span>Día <b>operable</b> (se operó). Desmárcalo para fin de semana, feriado o día sin operar.</span>
+      </label>
       <label class="field">
         <span>Nota (opcional)</span>
         <input type="text" id="reg-nota" maxlength="80" placeholder="EURUSD, sesión londres…">
@@ -92,7 +118,11 @@
     <div class="card">
       <h2>Evolución del capital</h2>
       <div class="chart-wrap"><canvas id="chart-crecimiento"></canvas></div>
-      <p class="hint">Línea: capital acumulado. La zona sombreada marca la diferencia contra el capital inicial.</p>
+      <p class="hint">
+        <span class="lg lg--op"></span> día operado ·
+        <span class="lg lg--noop"></span> día no operable (capital plano).
+        Pasa el cursor por el gráfico para ver el detalle de cada día.
+      </p>
     </div>
   </div>
 
@@ -102,8 +132,8 @@
       <table id="tabla-crecimiento">
         <thead>
           <tr>
-            <th>Fecha</th><th>Capital</th><th>Δ período</th><th>% período</th>
-            <th>% acumulado</th><th>Nota</th><th></th>
+            <th>Fecha</th><th>Día</th><th>Operable</th><th>Capital</th><th>Δ período</th>
+            <th>% período</th><th>% acumulado</th><th>Nota</th><th></th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -113,40 +143,43 @@
   </div>
 </section>
 
+<!-- ===================== COMPUESTO ===================== -->
 <section class="panel-group hidden" id="tab-compuesto" role="tabpanel">
   <div class="grid grid--2">
     <div class="card">
       <h2>Parámetros de la simulación</h2>
-      <label class="field">
-        <span>Capital inicial</span>
-        <input type="number" id="ci-capital" step="any" min="0" value="1000">
-      </label>
-
-      <label class="field">
-        <span>% de ganancia por operación: <b id="ci-pct-out">1.00%</b></span>
-        <input type="range" id="ci-pct-range" min="-5" max="10" step="0.05" value="1">
-      </label>
-      <input type="number" id="ci-pct" step="any" value="1" aria-label="Porcentaje por operación">
 
       <div class="field-row">
         <label class="field">
-          <span>N.º de operaciones/períodos</span>
-          <input type="number" id="ci-n" min="1" max="5000" step="1" value="60">
+          <span>Capital inicial</span>
+          <input type="number" id="ci-capital" step="any" min="0" value="1000">
         </label>
         <label class="field">
-          <span>Frecuencia</span>
-          <select id="ci-frec">
-            <option value="diario">Diario</option>
-            <option value="semanal">Semanal</option>
-            <option value="mensual">Mensual</option>
-            <option value="operacion">Por operación</option>
-          </select>
+          <span>Fecha de inicio</span>
+          <input type="date" id="ci-fecha">
         </label>
       </div>
 
       <label class="field">
-        <span>Aporte por período (opcional)</span>
-        <input type="number" id="ci-aporte" step="any" value="0">
+        <span>% de ganancia por <b>día operable</b>: <b id="ci-pct-out">4,00%</b></span>
+        <input type="range" id="ci-pct-range" min="-5" max="10" step="0.05" value="4">
+      </label>
+      <input type="number" id="ci-pct" step="any" value="4" aria-label="Porcentaje por día operable">
+
+      <label class="field mt">
+        <span>Días de calendario a proyectar</span>
+        <input type="number" id="ci-dias" min="1" max="1825" step="1" value="30">
+      </label>
+
+      <div class="field">
+        <span>Días operables de la semana</span>
+        <div class="dow" id="ci-dow"></div>
+      </div>
+
+      <label class="field">
+        <span>Fechas no operables (feriados o días sin operar)</span>
+        <textarea id="ci-feriados" rows="3"
+          placeholder="Una fecha por línea o separadas por coma:&#10;2026-09-15&#10;2026-10-12"></textarea>
       </label>
 
       <label class="check">
@@ -158,32 +191,39 @@
         <button class="btn btn--primary" id="ci-simular">Simular</button>
         <button class="btn" id="ci-export">Exportar CSV</button>
       </div>
-
-      <div class="kpis kpis--inline mt">
-        <div class="kpi"><span class="kpi__label">Capital final</span><strong id="ci-final">—</strong></div>
-        <div class="kpi"><span class="kpi__label">Ganancia total</span><strong id="ci-ganancia">—</strong></div>
-        <div class="kpi"><span class="kpi__label">Crecimiento total</span><strong id="ci-crecimiento">—</strong></div>
-      </div>
     </div>
 
     <div class="card">
       <h2>Proyección</h2>
       <div class="chart-wrap"><canvas id="chart-compuesto"></canvas></div>
-      <p class="hint">Comparativa: <span class="lg lg--compound"></span> compuesto · <span class="lg lg--simple"></span> simple (sin reinvertir).</p>
+      <p class="hint">
+        <span class="lg lg--compound"></span> compuesto ·
+        <span class="lg lg--simple"></span> simple (sin reinvertir) ·
+        <span class="lg lg--noop"></span> días no operables (tramo plano).
+      </p>
+
+      <div class="kpis kpis--inline mt">
+        <div class="kpi"><span class="kpi__label">Capital proyectado</span><strong id="ci-final">—</strong></div>
+        <div class="kpi"><span class="kpi__label">Ganancia total</span><strong id="ci-ganancia">—</strong></div>
+        <div class="kpi"><span class="kpi__label">Crecimiento total</span><strong id="ci-crecimiento">—</strong></div>
+        <div class="kpi"><span class="kpi__label">Días operables / calendario</span><strong id="ci-dias-op">—</strong></div>
+      </div>
+      <p class="hint" id="ci-resumen"></p>
     </div>
   </div>
 
   <div class="card">
-    <h2>Detalle período a período</h2>
+    <h2>Detalle día por día</h2>
     <div class="table-wrap table-wrap--tall">
       <table id="tabla-compuesto">
-        <thead><tr><th>#</th><th>Fecha estimada</th><th>Capital inicio</th><th>Ganancia</th><th>Capital fin</th><th>% acum.</th></tr></thead>
+        <thead><tr><th>#</th><th>Fecha</th><th>Día</th><th>Operable</th><th>Capital</th><th>Ganancia</th><th>% acum.</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
   </div>
 </section>
 
+<!-- ===================== CONVERSOR ===================== -->
 <section class="panel-group hidden" id="tab-conversor" role="tabpanel">
   <div class="grid grid--2">
     <div class="card">

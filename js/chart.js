@@ -157,8 +157,17 @@
       ctx.stroke();
       ctx.shadowBlur = 0; ctx.setLineDash([]);
 
-      // puntos sólo si hay pocos
-      if (n <= 40) {
+      // Puntos. Con pointColors se pinta un color por punto (null = sin punto),
+      // que es como se distinguen los días operables de los no operables.
+      if (s.pointColors) {
+        if (n <= 400) {
+          s.pointColors.forEach(function (pc, i) {
+            if (!pc) return;
+            ctx.fillStyle = pc;
+            ctx.beginPath(); ctx.arc(X(i), Y(s.values[i]), 3, 0, Math.PI * 2); ctx.fill();
+          });
+        }
+      } else if (n <= 40) {
         ctx.fillStyle = color;
         s.values.forEach(function (v, i) {
           ctx.beginPath(); ctx.arc(X(i), Y(v), 2.6, 0, Math.PI * 2); ctx.fill();
@@ -175,9 +184,13 @@
       ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + h); ctx.stroke();
       ctx.setLineDash([]);
 
-      const lines = [String(d.labels[hi])].concat(d.series.map(function (s) {
+      let lines = [String(d.labels[hi])].concat(d.series.map(function (s) {
         return s.name + ': ' + (d.format ? d.format(s.values[hi]) : fmtNum(s.values[hi]));
       }));
+      if (d.extra) {
+        const ex = d.extra(hi);
+        if (ex) lines = lines.concat([ex]);
+      }
       ctx.font = FONT;
       let bw = 0;
       lines.forEach(function (t) { bw = Math.max(bw, ctx.measureText(t).width); });
@@ -192,7 +205,8 @@
 
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       lines.forEach(function (t, i) {
-        ctx.fillStyle = i === 0 ? col('--txt-dim', '#93a2c8') : (d.series[i - 1].color || '#3ce0ff');
+        const s = d.series[i - 1];
+        ctx.fillStyle = (i === 0 || !s) ? col('--txt-dim', '#93a2c8') : (s.color || '#3ce0ff');
         ctx.fillText(t, bx + 9, by + 6 + i * 16);
       });
 
