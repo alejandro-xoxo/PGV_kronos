@@ -114,9 +114,73 @@
 </section>
 
 <section class="panel-group hidden" id="tab-compuesto" role="tabpanel">
+  <div class="grid grid--2">
+    <div class="card">
+      <h2>Parámetros de la simulación</h2>
+      <label class="field">
+        <span>Capital inicial</span>
+        <input type="number" id="ci-capital" step="any" min="0" value="1000">
+      </label>
+
+      <label class="field">
+        <span>% de ganancia por operación: <b id="ci-pct-out">1.00%</b></span>
+        <input type="range" id="ci-pct-range" min="-5" max="10" step="0.05" value="1">
+      </label>
+      <input type="number" id="ci-pct" step="any" value="1" aria-label="Porcentaje por operación">
+
+      <div class="field-row">
+        <label class="field">
+          <span>N.º de operaciones/períodos</span>
+          <input type="number" id="ci-n" min="1" max="5000" step="1" value="60">
+        </label>
+        <label class="field">
+          <span>Frecuencia</span>
+          <select id="ci-frec">
+            <option value="diario">Diario</option>
+            <option value="semanal">Semanal</option>
+            <option value="mensual">Mensual</option>
+            <option value="operacion">Por operación</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Aporte por período (opcional)</span>
+        <input type="number" id="ci-aporte" step="any" value="0">
+      </label>
+
+      <label class="check">
+        <input type="checkbox" id="ci-reinvertir" checked>
+        <span>Reinvertir ganancias (interés compuesto)</span>
+      </label>
+
+      <div class="btn-row">
+        <button class="btn btn--primary" id="ci-simular">Simular</button>
+        <button class="btn" id="ci-export">Exportar CSV</button>
+      </div>
+
+      <div class="kpis kpis--inline mt">
+        <div class="kpi"><span class="kpi__label">Capital final</span><strong id="ci-final">—</strong></div>
+        <div class="kpi"><span class="kpi__label">Ganancia total</span><strong id="ci-ganancia">—</strong></div>
+        <div class="kpi"><span class="kpi__label">Crecimiento total</span><strong id="ci-crecimiento">—</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Proyección</h2>
+      <div class="chart-wrap"><canvas id="chart-compuesto"></canvas></div>
+      <p class="hint">Comparativa: <span class="lg lg--compound"></span> compuesto · <span class="lg lg--simple"></span> simple (sin reinvertir).</p>
+    </div>
+  </div>
+
   <div class="card">
-    <h2>Simulador de interés compuesto</h2>
-    <p class="empty">Sección en construcción.</p>
+    <h2>Detalle período a período</h2>
+    <div class="table-wrap table-wrap--tall">
+      <table id="tabla-compuesto">
+        <thead><tr><th>#</th><th>Fecha estimada</th><th>Capital inicio</th><th>Ganancia</th><th>Capital fin</th><th>% acum.</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -137,6 +201,7 @@
 <script src="js/chart.js"></script>
 <script src="js/storage.js"></script>
 <script src="js/growth.js"></script>
+<script src="js/compound.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
