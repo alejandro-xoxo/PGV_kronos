@@ -16,13 +16,19 @@
       t.classList.toggle('is-active', activo);
       t.setAttribute('aria-selected', activo ? 'true' : 'false');
     });
+    Store.set('tab', nombre);
     if (location.hash.slice(1) !== nombre) history.replaceState(null, '', '#' + nombre);
+
+    // Los canvas ocultos miden 0 px: hay que redibujar al mostrarlos.
+    if (nombre === 'crecimiento') Growth.render();
   }
 
   tabs.forEach(function (t) {
     t.addEventListener('click', function () { mostrar(t.dataset.tab); });
   });
 
-  const inicial = location.hash.slice(1);
+  Growth.init();
+
+  const inicial = location.hash.slice(1) || Store.get('tab', 'crecimiento');
   mostrar(paneles[inicial] ? inicial : 'crecimiento');
 })();

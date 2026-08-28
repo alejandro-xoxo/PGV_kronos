@@ -33,9 +33,83 @@
 <main>
 
 <section class="panel-group" id="tab-crecimiento" role="tabpanel">
+
+  <div class="kpis">
+    <div class="kpi"><span class="kpi__label">Capital inicial</span><strong id="k-inicial">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Capital actual</span><strong id="k-actual">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Ganancia total</span><strong id="k-ganancia">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Crecimiento acumulado</span><strong id="k-pct">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Último período</span><strong id="k-ultimo">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Media por registro</span><strong id="k-media">—</strong></div>
+  </div>
+
+  <div class="grid grid--2">
+    <div class="card">
+      <h2>Configuración</h2>
+      <label class="field">
+        <span>Capital inicial</span>
+        <input type="number" id="capital-inicial" step="any" min="0" placeholder="1000">
+      </label>
+      <label class="field">
+        <span>Moneda de visualización</span>
+        <select id="moneda-display">
+          <option value="EUR">EUR €</option>
+          <option value="USD">USD $</option>
+          <option value="COP">COP $</option>
+        </select>
+      </label>
+
+      <h2 class="mt">Nuevo registro</h2>
+      <div class="field-row">
+        <label class="field">
+          <span>Fecha</span>
+          <input type="date" id="reg-fecha">
+        </label>
+        <label class="field">
+          <span>Tipo</span>
+          <select id="reg-tipo">
+            <option value="capital">Capital del día</option>
+            <option value="pct">% ganancia/pérdida</option>
+          </select>
+        </label>
+      </div>
+      <label class="field">
+        <span id="reg-valor-label">Capital del día</span>
+        <input type="number" id="reg-valor" step="any" placeholder="1010">
+      </label>
+      <label class="field">
+        <span>Nota (opcional)</span>
+        <input type="text" id="reg-nota" maxlength="80" placeholder="EURUSD, sesión londres…">
+      </label>
+      <div class="btn-row">
+        <button class="btn btn--primary" id="btn-add">Agregar registro</button>
+        <button class="btn" id="btn-export">Exportar CSV</button>
+        <button class="btn btn--danger" id="btn-reset">Resetear datos</button>
+      </div>
+      <p class="hint" id="msg-crecimiento" role="status"></p>
+    </div>
+
+    <div class="card">
+      <h2>Evolución del capital</h2>
+      <div class="chart-wrap"><canvas id="chart-crecimiento"></canvas></div>
+      <p class="hint">Línea: capital acumulado. La zona sombreada marca la diferencia contra el capital inicial.</p>
+    </div>
+  </div>
+
   <div class="card">
-    <h2>Crecimiento porcentual de capital</h2>
-    <p class="empty">Sección en construcción.</p>
+    <h2>Historial</h2>
+    <div class="table-wrap">
+      <table id="tabla-crecimiento">
+        <thead>
+          <tr>
+            <th>Fecha</th><th>Capital</th><th>Δ período</th><th>% período</th>
+            <th>% acumulado</th><th>Nota</th><th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="empty" id="empty-crecimiento">Aún no hay registros. Agrega el primero arriba.</p>
   </div>
 </section>
 
@@ -60,6 +134,9 @@
 </footer>
 
 <script src="js/starfield.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/growth.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
