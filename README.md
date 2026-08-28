@@ -310,7 +310,9 @@ ni configuración de Jekyll ni archivo `.nojekyll`.
 
 ## 🗺️ Hoja de Ruta: Integración Futura con `Kronos_Bot` (Docker + Ngrok)
 
-Actualmente, **PVG_kronos** se mantiene como un proyecto frontend independiente y estático publicado en GitHub Pages. En el futuro se planea su integración con el backend de **`Kronos_Bot`** para reemplazar la interfaz antigua del dashboard y sincronizar automáticamente las operaciones desde celular o PC.
+> **Trabajo relacionado → [Kronos_Bot (GitHub)](https://github.com/alejandro-xoxo/Kronos_Bot.git)** — Bot de ejecución automática de señales de Telegram a MT4 con backend en Python/Flask, n8n, PostgreSQL, Caddy y Ngrok.
+
+Actualmente, **PVG_kronos** se mantiene como un proyecto frontend independiente y estático publicado en GitHub Pages. En el futuro se planea su integración con el backend de [Kronos_Bot](https://github.com/alejandro-xoxo/Kronos_Bot.git) para reemplazar la interfaz antigua del dashboard y sincronizar automáticamente las operaciones desde celular o PC.
 
 ### Arquitectura Planificada de Fusión
 
