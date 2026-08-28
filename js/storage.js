@@ -30,6 +30,30 @@
           .filter(function (k) { return k.indexOf(NS) === 0; })
           .forEach(function (k) { localStorage.removeItem(k); });
       } catch (e) { /* ignorado */ }
+    },
+    exportBackup: function () {
+      const data = {};
+      try {
+        Object.keys(localStorage)
+          .filter(function (k) { return k.indexOf(NS) === 0; })
+          .forEach(function (k) {
+            const key = k.replace(NS, '');
+            data[key] = JSON.parse(localStorage.getItem(k));
+          });
+      } catch (e) { console.warn('Error al exportar datos', e); }
+      return data;
+    },
+    importBackup: function (data) {
+      if (!data || typeof data !== 'object') return false;
+      try {
+        Object.keys(data).forEach(function (key) {
+          Store.set(key, data[key]);
+        });
+        return true;
+      } catch (e) {
+        console.warn('Error al importar datos', e);
+        return false;
+      }
     }
   };
 

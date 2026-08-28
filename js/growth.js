@@ -333,6 +333,53 @@
     $('btn-export').addEventListener('click', exportar);
     $('btn-reset').addEventListener('click', resetear);
 
+    // Copia de seguridad JSON para transferir entre dispositivos
+    $('btn-backup-export').addEventListener('click', function () {
+      const data = Store.exportBackup();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'kronos-backup-' + hoyISO() + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      flash($('msg-crecimiento'), 'Copia de seguridad exportada.', 'ok');
+    });
+
+    $('btn-backup-import').addEventListener('click', function () {
+      $('input-backup-file').click();
+    });
+
+    $('input-backup-file').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (Store.importBackup(parsed)) {
+            state.inicio = Store.get('inicio', hoyISO());
+            state.inicial = Store.get('inicial', 1000);
+            state.moneda = Store.get('moneda', 'EUR');
+            state.registros = Store.get('registros', []);
+            $('fecha-inicio').value = state.inicio;
+            $('capital-inicial').value = state.inicial;
+            $('moneda-display').value = state.moneda;
+            render();
+            flash($('msg-crecimiento'), 'Datos importados correctamente.', 'ok');
+          } else {
+            flash($('msg-crecimiento'), 'Archivo de respaldo no válido.', 'error');
+          }
+        } catch (err) {
+          flash($('msg-crecimiento'), 'Error al leer el archivo JSON.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    });
+
     render();
   }
 
