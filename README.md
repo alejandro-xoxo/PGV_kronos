@@ -1,7 +1,7 @@
 # 🪐 Kronos — Panel de crecimiento de capital
 
 Panel de control personal para seguimiento de capital de trading, con contador de días
-del plan y lógica de **días operables**. Sitio **100 % estático** (HTML + CSS + JavaScript puro),
+del plan y lógica de **días operables**, sobre un tema visual de galaxia sobrio y elegante. Sitio **100 % estático** (HTML + CSS + JavaScript puro),
 **sin build, sin npm y sin dependencias externas**: listo para publicar en GitHub Pages tal cual.
 
 ## Contenido
@@ -80,39 +80,101 @@ Lo que no encaje con ese formato se ignora sin romper la simulación:
 
 ---
 
-## Diseño — tema galáctico / espacial
+## Diseño — tema galáctico elegante
 
-El sitio tiene un **tema visual de galaxia/espacio** documentado como parte del diseño:
+Estética sobria de **dashboard financiero premium**, no de videojuego: sin neón, sin
+animaciones llamativas, con acentos discretos y mucho aire.
 
-- **Fondo animado de espacio profundo** dibujado sobre `<canvas>`: tres capas de estrellas
-  con **efecto parallax** (cada capa se desplaza a distinta velocidad) y **parpadeo** individual.
-- **Planetas decorativos**: uno estilo **Marte** (rojizo, semitransparente, arriba a la derecha,
-  con cráteres sutiles y rotación muy lenta) y un segundo planeta azulado abajo a la izquierda,
-  ambos con una leve animación de flotación.
-- **Paleta oscura espacial**: negros y azules profundos, con acentos neón suaves —
-  cian `#3ce0ff`, morado `#a06bff` y naranja marciano `#ff7a45` — en botones, bordes y gráficos.
-- **Glassmorphism**: paneles y tarjetas con fondo semiopaco y `backdrop-filter: blur()` para que
-  el contenido se lea con claridad por encima del fondo animado.
-- Interfaz tipo dashboard, **en español** y **responsive** (móvil incluido).
+### Imagen de fondo (reemplazable)
 
-### Rendimiento de la animación
+El fondo principal es una **imagen de galaxia** incluida en el proyecto, en
+`assets/fondo-galaxia.jpg` (JPEG progresivo, ~354 KB). Para poner la tuya basta con dejar el
+archivo en `assets/` y cambiar **una sola línea** al principio de `styles.css`:
 
-- `requestAnimationFrame` en un único bucle, sin `setInterval`.
-- Número de estrellas proporcional al área de la ventana y con **techo duro de 420**.
-- `devicePixelRatio` limitado a 2× para no pintar píxeles de más.
+```css
+:root{
+  /* IMAGEN DE FONDO — cámbiala por la tuya (.jpg, .png o .webp) */
+  --fondo-imagen: url("assets/fondo-galaxia.jpg");
+}
+```
+
+Justo debajo hay cuatro variables para adaptar cualquier imagen sin tocar nada más:
+
+| Variable | Qué hace |
+|---|---|
+| `--fondo-brillo` | 0 = negro · 1 = imagen original (por defecto `0.78`) |
+| `--fondo-saturacion` | Por debajo de 1 apaga el color y la vuelve más sobria |
+| `--fondo-desenfoque` | Desenfoque leve que da sensación de lejanía |
+| `--fondo-velo` | Opacidad del velo oscuro que garantiza el contraste del texto |
+
+Si tu imagen es más clara o más cargada que la de ejemplo, baja `--fondo-brillo` o sube
+`--fondo-velo` hasta que el texto se lea con comodidad.
+
+### Capas visuales
+
+1. **`.bg-imagen`** — la imagen, fija, atenuada y con desenfoque leve.
+2. **`.bg-velo`** — velo oscuro degradado que asegura la legibilidad sobre cualquier foto.
+3. **`#starfield`** — capa de partículas animadas sobre la imagen, en canvas.
+4. **Contenido** — por encima de todo.
+
+### Partículas
+
+Sobre la imagen se mueve una capa de **estrellas discretas**: tres capas a distinta velocidad
+(**parallax**) con parpadeo lento y contenido — nunca llegan a apagarse del todo. Aportan
+profundidad y movimiento sin ensuciar la fotografía. Techo de **260 partículas**, deriva muy
+lenta y tonos blanco frío, plata y un dorado tenue de acento.
+
+### Paleta y tipografía
+
+- **Superficies**: negro `#05070c`, azul marino profundo `#0b1220`, gris carbón `#141821`.
+- **Un único acento**, nunca neón: azul acero apagado `#6f8fac`, para focos de campo,
+  botones primarios, la pestaña activa y el filete de los KPIs. Sin dorado ni plata en la
+  interfaz — esos tonos quedan reservados a la capa de partículas del fondo.
+- **Semánticos apagados** a propósito: alza `#6fae8e`, baja `#c07b7b`.
+- **Gráficos**: el mismo azul acero para la curva principal (compuesta o capital), gris
+  neutro `#7c8698` para la curva secundaria (simple) y para los días no operables.
+- **Tipografía**: **Inter** vía Google Fonts (pesos 300–600), con pila del sistema como
+  respaldo. Cifras con `tabular-nums` para que las columnas no bailen.
+
+### Glassmorphism y bordes
+
+Paneles y tarjetas usan fondo semitransparente con `backdrop-filter: blur(16px)` y **bordes de
+1 px casi imperceptibles** (`rgba(196,205,224,.10)`) en lugar de bordes gruesos de color. El
+único acento cromático de las tarjetas es un filete azul acero vertical de 1 px en los KPIs.
+
+### Movimiento
+
+Todas las animaciones son lentas y discretas: transiciones de 0,2 s en botones y campos, deriva
+de estrellas casi imperceptible y ningún efecto de brillo pulsante. No hay planetas ni halos de
+color: la profundidad la aporta la fotografía.
+
+### Rendimiento
+
+- Imagen de fondo **comprimida y optimizada**: 3,9 MB → **354 KB**, JPEG progresivo, sin
+  metadatos.
+- Partículas con `requestAnimationFrame` en un único bucle, sin `setInterval`.
+- Cantidad proporcional al área de la ventana y con **techo duro de 260**.
+- `devicePixelRatio` limitado a 2x para no pintar píxeles de más.
 - La animación se **pausa automáticamente** cuando la pestaña deja de estar visible
   (`visibilitychange`).
-- Respeta `prefers-reduced-motion`: con esa preferencia activa, el fondo se pinta **estático**
-  y los planetas no se animan.
+- Respeta `prefers-reduced-motion`: las partículas se pintan **estáticas** y las transiciones
+  se anulan.
+- En móvil la imagen se atenúa un punto más, para reducir el ruido tras el contenido.
+
+Interfaz tipo dashboard, **en español**, **responsive** (comprobada sin scroll horizontal a
+376 px de ancho) y en una sola página con pestañas para Crecimiento, Interés compuesto y
+Conversor.
 
 ## Estructura del proyecto
 
 ```
 .
 ├── index.html          # una sola página con 3 pestañas
-├── styles.css          # tema galáctico, glassmorphism, responsive
+├── styles.css          # tema elegante, glassmorphism, responsive
+├── assets/
+│   └── fondo-galaxia.jpg   # imagen de fondo (reemplazable, ver Diseño)
 ├── js/
-│   ├── starfield.js    # fondo de estrellas con parallax (canvas)
+│   ├── starfield.js    # capa de partículas con parallax (canvas)
 │   ├── chart.js        # mini librería de gráficos de línea (canvas, sin CDN)
 │   ├── storage.js      # localStorage, formatos es-ES, utilidades de calendario y CSV
 │   ├── growth.js       # Sección 1 — crecimiento y contador de días del plan

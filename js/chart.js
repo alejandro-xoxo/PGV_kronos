@@ -7,9 +7,9 @@
   const CSS = getComputedStyle(document.documentElement);
   const col = function (n, fb) { return (CSS.getPropertyValue(n) || '').trim() || fb; };
 
-  const GRID = 'rgba(120,160,255,0.10)';
-  const AXIS = 'rgba(147,162,200,0.85)';
-  const FONT = '11px "Segoe UI", system-ui, sans-serif';
+  const GRID = 'rgba(196,205,224,0.075)';
+  const AXIS = 'rgba(152,161,179,0.85)';
+  const FONT = '11px "Inter", ui-sans-serif, system-ui, sans-serif';
 
   function niceTicks(min, max, count) {
     if (min === max) { min -= 1; max += 1; }
@@ -132,7 +132,7 @@
     // series
     const self = this;
     d.series.forEach(function (s) {
-      const color = s.color || col('--cyan', '#3ce0ff');
+      const color = s.color || col('--azul', '#6f8fac');
 
       if (s.fill) {
         const baseV = Math.min(Math.max(s.baseline != null ? s.baseline : yMin, yMin), yMax);
@@ -151,7 +151,7 @@
       ctx.lineWidth = 2;
       ctx.lineJoin = 'round'; ctx.lineCap = 'round';
       if (s.dashed) ctx.setLineDash([5, 5]); else ctx.setLineDash([]);
-      ctx.shadowColor = hexA(color, .55); ctx.shadowBlur = 8;
+      ctx.shadowColor = hexA(color, .22); ctx.shadowBlur = 5;
       ctx.beginPath();
       s.values.forEach(function (v, i) { i ? ctx.lineTo(X(i), Y(v)) : ctx.moveTo(X(i), Y(v)); });
       ctx.stroke();
@@ -179,7 +179,7 @@
     const hi = this.hover;
     if (hi >= 0 && hi < n) {
       const x = X(hi);
-      ctx.strokeStyle = 'rgba(120,160,255,.35)';
+      ctx.strokeStyle = 'rgba(196,205,224,.28)';
       ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + h); ctx.stroke();
       ctx.setLineDash([]);
@@ -199,21 +199,21 @@
       let bx = x + 12; if (bx + bw > left + w) bx = x - bw - 12;
       const by = top + 8;
 
-      ctx.fillStyle = 'rgba(8,13,30,.94)';
-      ctx.strokeStyle = 'rgba(120,160,255,.3)';
+      ctx.fillStyle = 'rgba(12,16,25,.95)';
+      ctx.strokeStyle = 'rgba(196,205,224,.16)';
       roundRect(ctx, bx, by, bw, bh, 8); ctx.fill(); ctx.stroke();
 
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       lines.forEach(function (t, i) {
         const s = d.series[i - 1];
-        ctx.fillStyle = (i === 0 || !s) ? col('--txt-dim', '#93a2c8') : (s.color || '#3ce0ff');
+        ctx.fillStyle = (i === 0 || !s) ? col('--txt-mute', '#6d768a') : (s.color || '#6f8fac');
         ctx.fillText(t, bx + 9, by + 6 + i * 16);
       });
 
       d.series.forEach(function (s) {
-        ctx.fillStyle = s.color || '#3ce0ff';
+        ctx.fillStyle = s.color || '#6f8fac';
         ctx.beginPath(); ctx.arc(x, Y(s.values[hi]), 4, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#04060f'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.strokeStyle = '#05070c'; ctx.lineWidth = 1.5; ctx.stroke();
       });
     }
   };

@@ -196,15 +196,15 @@
       },
       series: [
         {
-          name: 'Compuesto', color: '#3ce0ff', fill: true, baseline: p.capital,
+          name: 'Compuesto', color: '#6f8fac', fill: true, baseline: p.capital,
           values: [p.capital].concat(filas.map(function (f) { return f.capital; })),
           // Sólo se marcan los días NO operables, para que se vean los tramos planos.
           pointColors: [null].concat(filas.map(function (f) {
-            return f.operable ? null : '#93a2c8';
+            return f.operable ? null : '#7c8698';
           }))
         },
         {
-          name: 'Simple', color: '#ff7a45', dashed: true,
+          name: 'Simple', color: '#7c8698', dashed: true,
           values: [p.capital].concat(filas.map(function (f) { return f.simple; }))
         }
       ]
