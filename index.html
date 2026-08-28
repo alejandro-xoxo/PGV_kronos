@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kronos · Panel de Capital</title>
+<meta name="description" content="Panel personal de crecimiento de capital de trading.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🪐</text></svg>">
+</head>
+<body>
+
+<canvas id="starfield" aria-hidden="true"></canvas>
+<div class="planet planet--mars" aria-hidden="true"></div>
+<div class="planet planet--blue" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand__mark">🪐</span>
+    <div>
+      <h1>Kronos</h1>
+      <p>Panel de crecimiento de capital</p>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab is-active" role="tab" data-tab="crecimiento" aria-selected="true">Crecimiento</button>
+    <button class="tab" role="tab" data-tab="compuesto" aria-selected="false">Interés compuesto</button>
+    <button class="tab" role="tab" data-tab="conversor" aria-selected="false">Conversor</button>
+  </nav>
+</header>
+
+<main>
+
+<section class="panel-group" id="tab-crecimiento" role="tabpanel">
+  <div class="card">
+    <h2>Crecimiento porcentual de capital</h2>
+    <p class="empty">Sección en construcción.</p>
+  </div>
+</section>
+
+<section class="panel-group hidden" id="tab-compuesto" role="tabpanel">
+  <div class="card">
+    <h2>Simulador de interés compuesto</h2>
+    <p class="empty">Sección en construcción.</p>
+  </div>
+</section>
+
+<section class="panel-group hidden" id="tab-conversor" role="tabpanel">
+  <div class="card">
+    <h2>Conversor de monedas a EUR</h2>
+    <p class="empty">Sección en construcción.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>Datos guardados localmente en tu navegador (localStorage). Nada se envía a ningún servidor salvo la consulta de tasas de cambio.</p>
+</footer>
+
+<script src="js/starfield.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
