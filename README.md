@@ -305,3 +305,43 @@ ni configuración de Jekyll ni archivo `.nojekyll`.
 - El selector de moneda de la sección *Crecimiento* afecta **solo al formato de visualización**:
   no convierte las cifras que ya introdujiste. El calendario usa la misma moneda seleccionada.
 - La tabla del simulador muestra como máximo 500 filas por rendimiento; el CSV exporta todas.
+
+---
+
+## 🗺️ Hoja de Ruta: Integración Futura con `Kronos_Bot` (Docker + Ngrok)
+
+Actualmente, **PVG_kronos** se mantiene como un proyecto frontend independiente y estático publicado en GitHub Pages. En el futuro se planea su integración con el backend de **`Kronos_Bot`** para reemplazar la interfaz antigua del dashboard y sincronizar automáticamente las operaciones desde celular o PC.
+
+### Arquitectura Planificada de Fusión
+
+```
+[ Celular / PC remoto ]
+          │ (HTTPS vía Ngrok + HTTP Basic Auth)
+          ▼
+   [ Proxy Caddy / Docker ] ── (Puerto 8088)
+          │
+          ▼
+   [ Kronos_Bot Backend (Flask) ]
+          │
+   ┌──────┴─────────────────────────┐
+   ▼                                ▼
+[ PostgreSQL (Base de datos) ]   [ MT4 Bridge (status.json) ]
+```
+
+### Pasos de Implementación Futura
+
+1. **Reemplazo del Frontend (`Kronos_Bot/dashboard/static`)**:
+   - Copiar los recursos de `PVG_kronos` (`index.html`, `styles.css`, `assets/`, `js/`) al directorio `/dashboard/static` de `Kronos_Bot`.
+
+2. **Adaptación de Persistencia Híbrida en `storage.js`**:
+   - Configurar `storage.js` para detectar si existe un backend activo en `/api/registros`.
+   - Si la API responde, sincronizar `GET` y `POST` con PostgreSQL; si no (ej. en GitHub Pages), mantener `localStorage` como fallback local.
+
+3. **Endpoints a expender en `Kronos_Bot/dashboard/main.py`**:
+   - `GET /api/registros`: Retorna el historial de operaciones desde PostgreSQL.
+   - `POST /api/registros`: Guarda un nuevo registro operado.
+   - `GET /api/status`: Provee las posiciones abiertas reales directamente leídas desde MetaTrader 4.
+
+4. **Sincronización Multi-dispositivo en tiempo real**:
+   - Al conectarse desde el celular o cualquier computadora vía la URL pública de Ngrok (protegida por Basic Auth), cualquier cambio introducido se guardará en PostgreSQL y se reflejará inmediatamente en todos los dispositivos conectados.
+
