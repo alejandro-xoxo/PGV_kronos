@@ -34,6 +34,7 @@
   <nav class="tabs" role="tablist">
     <button class="tab is-active" role="tab" data-tab="crecimiento" aria-selected="true">Crecimiento</button>
     <button class="tab" role="tab" data-tab="compuesto" aria-selected="false">Interés compuesto</button>
+    <button class="tab" role="tab" data-tab="calendario" aria-selected="false">Calendario</button>
     <button class="tab" role="tab" data-tab="conversor" aria-selected="false">Conversor</button>
   </nav>
 </header>
@@ -297,6 +298,54 @@
   </div>
 </section>
 
+<!-- ===================== CALENDARIO ===================== -->
+<section class="panel-group hidden" id="tab-calendario" role="tabpanel">
+
+  <!-- Cabecera: navegación de mes + KPIs arriba a la derecha -->
+  <div class="cal-header">
+    <div class="cal-nav">
+      <button class="cal-nav__btn" id="cal-prev" aria-label="Mes anterior">&#8249;</button>
+      <span class="cal-nav__titulo" id="cal-titulo">—</span>
+      <button class="cal-nav__btn" id="cal-next" aria-label="Mes siguiente">&#8250;</button>
+      <button class="cal-nav__hoy" id="cal-hoy">Hoy</button>
+    </div>
+
+    <div class="cal-kpis">
+      <div class="cal-kpi">
+        <span class="cal-kpi__label">Días operados</span>
+        <span class="cal-kpi__val" id="cal-dias-op">—</span>
+      </div>
+      <div class="cal-kpi">
+        <span class="cal-kpi__label">Mejor día</span>
+        <span class="cal-kpi__val pos" id="cal-mejor">—</span>
+      </div>
+      <div class="cal-kpi">
+        <span class="cal-kpi__label">Peor día</span>
+        <span class="cal-kpi__val neg" id="cal-peor">—</span>
+      </div>
+      <div class="cal-kpi cal-kpi--total">
+        <span class="cal-kpi__label">Total del mes</span>
+        <span class="cal-kpi__val" id="cal-total">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cabecera de días de la semana -->
+  <div class="cal-weekdays" aria-hidden="true">
+    <div class="cal-weekday">Lun</div>
+    <div class="cal-weekday">Mar</div>
+    <div class="cal-weekday">Mié</div>
+    <div class="cal-weekday">Jue</div>
+    <div class="cal-weekday">Vie</div>
+    <div class="cal-weekday">Sáb</div>
+    <div class="cal-weekday">Dom</div>
+  </div>
+
+  <!-- Cuadrícula del mes (llenada por calendar.js) -->
+  <div class="cal-grid" id="cal-grid" role="grid" aria-label="Calendario de trading"></div>
+
+</section>
+
 </main>
 
 <footer class="footer">
@@ -309,6 +358,7 @@
 <script src="js/growth.js"></script>
 <script src="js/compound.js"></script>
 <script src="js/fx.js"></script>
+<script src="js/calendar.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

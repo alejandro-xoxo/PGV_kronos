@@ -201,6 +201,8 @@
     pintarKPIs(filas);
     pintarTabla(filas);
     pintarGrafico(filas);
+    // Sincroniza el calendario si existe
+    if (window.CalTrader) CalTrader.render();
     return filas;
   }
 
