@@ -1,7 +1,7 @@
 /* ==========================================================================
    Kronos — tema galáctico elegante
    Estética sobria de dashboard financiero: imagen de galaxia de fondo,
-   partículas discretas, acentos en dorado suave / plateado / azul frío.
+   partículas discretas, un único acento en azul acero apagado.
    ========================================================================== */
 
 :root{
@@ -35,12 +35,9 @@
   --txt-dim:  #98a1b3;
   --txt-mute: #6d768a;
 
-  /* Acentos discretos */
-  --oro:      #c9a86a;   /* dorado suave: acento principal */
-  --oro-tenue:rgba(201, 168, 106, 0.16);
-  --plata:    #b6becd;
-  --azul:     #7ea3cc;   /* azul frío */
-  --azul-tenue:rgba(126, 163, 204, 0.14);
+  /* Acento único: azul acero apagado, para datos e interacción */
+  --azul:      #6f8fac;
+  --azul-tenue:rgba(111, 143, 172, 0.16);
 
   /* Semánticos, apagados a propósito (nada de verde/rojo chillón) */
   --alza:  #6fae8e;
@@ -137,8 +134,8 @@ body{
   place-items: center;
   border-radius: 50%;
   border: 1px solid var(--borde-alto);
-  background: linear-gradient(150deg, rgba(201, 168, 106, 0.14), rgba(126, 163, 204, 0.08));
-  color: var(--oro);
+  background: linear-gradient(150deg, var(--azul-tenue), rgba(111, 143, 172, 0.06));
+  color: var(--azul);
 }
 .brand__mark svg{ width: 19px; height: 19px; display: block }
 
@@ -191,7 +188,7 @@ body{
   display: block;
   height: 1px;
   margin: 6px 2px -4px;
-  background: linear-gradient(90deg, transparent, var(--oro), transparent);
+  background: linear-gradient(90deg, transparent, var(--azul), transparent);
 }
 
 main{ max-width: 1280px; margin: 0 auto; padding: 12px clamp(16px, 4vw, 40px) 48px }
@@ -303,14 +300,14 @@ main{ max-width: 1280px; margin: 0 auto; padding: 12px clamp(16px, 4vw, 40px) 48
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
-/* filete dorado de 1 px, discreto */
+/* filete de 1 px, discreto */
 .kpi::before{
   content: "";
   position: absolute;
   left: 0; top: 14px; bottom: 14px;
   width: 1px;
-  background: linear-gradient(180deg, transparent, var(--oro), transparent);
-  opacity: .7;
+  background: linear-gradient(180deg, transparent, var(--azul), transparent);
+  opacity: .6;
 }
 .kpi__label{
   display: block;
@@ -356,8 +353,8 @@ input::placeholder, textarea::placeholder{ color: var(--txt-mute) }
 input:hover, select:hover, textarea:hover{ border-color: var(--borde-alto) }
 input:focus, select:focus, textarea:focus{
   outline: none;
-  border-color: rgba(201, 168, 106, 0.55);
-  box-shadow: 0 0 0 3px var(--oro-tenue);
+  border-color: rgba(111, 143, 172, 0.55);
+  box-shadow: 0 0 0 3px var(--azul-tenue);
   background: rgba(5, 8, 14, 0.75);
 }
 select option{ background: var(--carbon); color: var(--txt) }
@@ -367,7 +364,7 @@ input[type=range]{
   height: 24px;
   border: 0;
   background: transparent;
-  accent-color: var(--oro);
+  accent-color: var(--azul);
 }
 input[type=range]:focus{ box-shadow: none }
 
@@ -384,7 +381,7 @@ input[type=range]:focus{ box-shadow: none }
   width: 17px; height: 17px;
   flex: 0 0 auto;
   margin-top: 2px;
-  accent-color: var(--oro);
+  accent-color: var(--azul);
 }
 .check b{ color: var(--txt); font-weight: 600 }
 
@@ -405,11 +402,11 @@ input[type=range]:focus{ box-shadow: none }
   transition: border-color .2s ease, background-color .2s ease, color .2s ease;
 }
 .dow__item:hover{ border-color: var(--borde-alto) }
-.dow__item input{ width: 15px; height: 15px; flex: 0 0 auto; accent-color: var(--oro) }
+.dow__item input{ width: 15px; height: 15px; flex: 0 0 auto; accent-color: var(--azul) }
 .dow__item:has(input:checked){
   color: var(--txt);
-  border-color: rgba(201, 168, 106, 0.42);
-  background: var(--oro-tenue);
+  border-color: rgba(111, 143, 172, 0.42);
+  background: var(--azul-tenue);
 }
 
 /* --------------------------------------------------------------------------
@@ -431,10 +428,10 @@ input[type=range]:focus{ box-shadow: none }
 .btn--primary{
   color: #10131a;
   font-weight: 600;
-  background: linear-gradient(140deg, #d8bd84, var(--oro));
+  background: linear-gradient(140deg, #8ba8c1, var(--azul));
   border-color: transparent;
 }
-.btn--primary:hover{ background: linear-gradient(140deg, #e2c894, #d2b276); color: #10131a }
+.btn--primary:hover{ background: linear-gradient(140deg, #97b2c8, #648099); color: #10131a }
 .btn--danger{ color: var(--baja); border-color: rgba(192, 123, 123, 0.3) }
 .btn--danger:hover{ color: #d59191; background: rgba(192, 123, 123, 0.1) }
 
@@ -509,9 +506,9 @@ tbody tr.row-noop td:first-child{ box-shadow: inset 2px 0 0 rgba(182, 190, 205, 
 .chart-wrap canvas{ display: block; width: 100%; height: 100% }
 
 .lg{ display: inline-block; width: 20px; height: 2px; border-radius: 1px; vertical-align: middle }
-.lg--compound{ background: #8fb3d9 }
-.lg--simple{ background: #c9a86a }
-.lg--op{ width: 8px; height: 8px; border-radius: 50%; background: #8fb3d9 }
+.lg--compound{ background: var(--azul) }
+.lg--simple{ background: #7c8698 }
+.lg--op{ width: 8px; height: 8px; border-radius: 50%; background: var(--azul) }
 .lg--noop{ width: 8px; height: 8px; border-radius: 50%; background: #7c8698 }
 
 /* --------------------------------------------------------------------------

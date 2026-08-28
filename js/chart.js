@@ -132,7 +132,7 @@
     // series
     const self = this;
     d.series.forEach(function (s) {
-      const color = s.color || col('--azul', '#8fb3d9');
+      const color = s.color || col('--azul', '#6f8fac');
 
       if (s.fill) {
         const baseV = Math.min(Math.max(s.baseline != null ? s.baseline : yMin, yMin), yMax);
@@ -206,12 +206,12 @@
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       lines.forEach(function (t, i) {
         const s = d.series[i - 1];
-        ctx.fillStyle = (i === 0 || !s) ? col('--txt-mute', '#6d768a') : (s.color || '#8fb3d9');
+        ctx.fillStyle = (i === 0 || !s) ? col('--txt-mute', '#6d768a') : (s.color || '#6f8fac');
         ctx.fillText(t, bx + 9, by + 6 + i * 16);
       });
 
       d.series.forEach(function (s) {
-        ctx.fillStyle = s.color || '#8fb3d9';
+        ctx.fillStyle = s.color || '#6f8fac';
         ctx.beginPath(); ctx.arc(x, Y(s.values[hi]), 4, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = '#05070c'; ctx.lineWidth = 1.5; ctx.stroke();
       });

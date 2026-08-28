@@ -1,0 +1,6 @@
+# Imágenes de trabajo sueltas en la raíz (originales sin optimizar, capturas, etc.).
+# Los assets que sí usa el sitio viven versionados dentro de /assets.
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp

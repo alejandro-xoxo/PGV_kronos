@@ -127,11 +127,12 @@ lenta y tonos blanco frío, plata y un dorado tenue de acento.
 ### Paleta y tipografía
 
 - **Superficies**: negro `#05070c`, azul marino profundo `#0b1220`, gris carbón `#141821`.
-- **Acentos discretos**, nunca neón: dorado suave `#c9a86a` (acento principal: filete de los
-  KPIs, foco de los campos, botones primarios), plata `#b6becd` y azul frío `#7ea3cc`.
+- **Un único acento**, nunca neón: azul acero apagado `#6f8fac`, para focos de campo,
+  botones primarios, la pestaña activa y el filete de los KPIs. Sin dorado ni plata en la
+  interfaz — esos tonos quedan reservados a la capa de partículas del fondo.
 - **Semánticos apagados** a propósito: alza `#6fae8e`, baja `#c07b7b`.
-- **Gráficos**: azul frío para la curva compuesta, dorado punteado para la simple, plata para
-  los días no operables.
+- **Gráficos**: el mismo azul acero para la curva principal (compuesta o capital), gris
+  neutro `#7c8698` para la curva secundaria (simple) y para los días no operables.
 - **Tipografía**: **Inter** vía Google Fonts (pesos 300–600), con pila del sistema como
   respaldo. Cifras con `tabular-nums` para que las columnas no bailen.
 
@@ -139,7 +140,7 @@ lenta y tonos blanco frío, plata y un dorado tenue de acento.
 
 Paneles y tarjetas usan fondo semitransparente con `backdrop-filter: blur(16px)` y **bordes de
 1 px casi imperceptibles** (`rgba(196,205,224,.10)`) en lugar de bordes gruesos de color. El
-único acento cromático de las tarjetas es un filete dorado vertical de 1 px en los KPIs.
+único acento cromático de las tarjetas es un filete azul acero vertical de 1 px en los KPIs.
 
 ### Movimiento
 

@@ -184,12 +184,12 @@
       },
       series: [{
         name: 'Capital',
-        color: '#8fb3d9',
+        color: '#6f8fac',
         fill: true,
         baseline: base,
         values: [base].concat(filas.map(function (f) { return f.capital; })),
-        pointColors: ['#c9a86a'].concat(filas.map(function (f) {
-          return f.operable ? '#8fb3d9' : '#7c8698';
+        pointColors: ['#6f8fac'].concat(filas.map(function (f) {
+          return f.operable ? '#6f8fac' : '#7c8698';
         }))
       }]
     });
