@@ -1,8 +1,13 @@
 # 🪐 Kronos — Panel de crecimiento de capital
 
+> **Demo en vivo → [alejandro-xoxo.github.io/PVG_kronos](https://alejandro-xoxo.github.io/PVG_kronos/)**
+
 Panel de control personal para seguimiento de capital de trading, con contador de días
-del plan y lógica de **días operables**, sobre un tema visual de galaxia sobrio y elegante. Sitio **100 % estático** (HTML + CSS + JavaScript puro),
+del plan, lógica de **días operables** y un **calendario visual mensual** de ganancias,
+sobre un tema galáctico sobrio y elegante. Sitio **100 % estático** (HTML + CSS + JavaScript puro),
 **sin build, sin npm y sin dependencias externas**: listo para publicar en GitHub Pages tal cual.
+
+---
 
 ## Contenido
 
@@ -10,9 +15,10 @@ del plan y lógica de **días operables**, sobre un tema visual de galaxia sobri
 |---|---|
 | **Crecimiento** | Fecha de inicio + capital inicial. Muestra en grande **en qué día del plan estás** y distingue días calendario transcurridos, días operables, días no operables y días aún sin registrar. Historial por fecha (capital del día **o** % de ganancia/pérdida), cada registro marcado como operable o no. Calcula Δ y % del período, % acumulado y crecimiento medio **tanto por día calendario como por día operable**. Gráfico de línea que diferencia visualmente los días operados de los no operados. |
 | **Interés compuesto** | Simula día a día sobre el calendario: capital inicial, % por **día operable**, días de calendario a proyectar, fecha de inicio, selector de días operables de la semana (lun–dom) y lista de fechas no operables. Tabla día por día y gráfico con los tramos planos de los días no operables. Resumen con capital proyectado, ganancia, % total y **días operables reales vs días calendario**. |
+| **Calendario** | Vista mensual de tipo trader: cada día del mes muestra la ganancia o pérdida real registrada, coloreada en verde (positivo) o rojo (negativo). KPIs del mes en la cabecera — **total del mes** arriba a la derecha, días operados, mejor y peor día. Navegación entre meses y sincronización automática con los datos de *Crecimiento*. |
 | **Conversor** | Convierte COP, USD y cualquier otra moneda a EUR (y al revés) con tasas en vivo. Endpoint y API key configurables; tasas manuales como respaldo sin internet. |
 
-Extras: **exportar a CSV** en ambas secciones (**incluyendo la columna de si el día fue operable**),
+Extras: **exportar a CSV** en Crecimiento e Interés compuesto (incluyendo la columna de si el día fue operable),
 **botón de reseteo**, y persistencia automática en `localStorage` (los datos nunca salen de tu navegador).
 
 ---
@@ -37,7 +43,7 @@ siempre las dos cuentas.
   se **presugiere automáticamente**: se desmarca si cae en sábado o domingo. Siempre puedes
   cambiarla a mano (por ejemplo, un feriado entre semana o un lunes que no operaste).
 - Los días no operables aparecen en el historial **atenuados y con una marca lateral**, y en
-  el gráfico con un **punto gris** en lugar de cian, de modo que las mesetas planas del fin de
+  el gráfico con un **punto gris** en lugar de azul, de modo que las mesetas planas del fin de
   semana se ven de un vistazo.
 - La banda superior muestra cuatro contadores: días calendario transcurridos, días operables
   registrados, días no operables registrados y **días sin registrar** (días del calendario ya
@@ -59,7 +65,7 @@ siempre las dos cuentas.
 - El porcentaje se aplica **únicamente** en los días operables, reinvirtiendo el resultado
   (interés compuesto). En los días no operables el capital pasa intacto al día siguiente.
 - El gráfico marca los días no operables con un punto gris, que es donde la curva se aplana;
-  la línea naranja punteada es la misma proyección **sin reinvertir**, para comparar.
+  la línea secundaria punteada es la misma proyección **sin reinvertir**, para comparar.
 - El resumen indica siempre **cuántos días operables reales hubo frente a los días calendario
   totales** del rango elegido.
 
@@ -80,10 +86,55 @@ Lo que no encaje con ese formato se ignora sin romper la simulación:
 
 ---
 
+## Calendario de Trader
+
+La pestaña **Calendario** muestra una cuadrícula mensual estilo heatmap de sesión,
+pensada para revisar de un vistazo qué días ganaste, cuánto y cómo quedó el mes.
+
+### Celdas del calendario
+
+Cada día del mes es una tarjeta de cristal que puede tener cuatro estados:
+
+| Color | Significado |
+|---|---|
+| 🟢 **Verde** | Día operado con ganancia. Muestra el Δ en moneda y el % del día. |
+| 🔴 **Rojo** | Día operado con pérdida. Muestra el Δ negativo y el % del día. |
+| ⬛ **Gris tenue** | Día registrado como no operable (fin de semana, feriado, etc.). |
+| ░ **Borde punteado** | Día pasado sin ningún dato registrado todavía. |
+| ⬜ **Transparente** | Día futuro: aún no ha ocurrido. |
+| 🔵 **Borde azul** | El día de hoy (resaltado con el acento azul del tema). |
+
+Si el registro incluye una **nota** (p. ej. «EURUSD, sesión Londres»), aparece como texto
+pequeño en la parte inferior de la celda.
+
+### KPIs del mes (cabecera)
+
+Arriba a la derecha aparecen cuatro indicadores del mes visible:
+
+| KPI | Descripción |
+|---|---|
+| **Días operados** | Número de registros del mes marcados como operables. |
+| **Mejor día** | La mayor ganancia individual del mes (en verde). |
+| **Peor día** | La mayor pérdida individual del mes (en rojo). |
+| **Total del mes** | Suma neta de todas las ganancias y pérdidas del mes. En verde si el mes cierra en positivo, en rojo si cierra en negativo. |
+
+### Navegación
+
+- Botones **`‹`** y **`›`** para ir al mes anterior/siguiente.
+- Botón **Hoy** para volver siempre al mes en curso.
+
+### Sincronización automática
+
+El calendario se actualiza **en tiempo real** al agregar o eliminar registros desde la
+pestaña *Crecimiento*: no es necesario recargar la página ni cambiar de pestaña.
+
+---
+
 ## Diseño — tema galáctico elegante
 
-Estética sobria de **dashboard financiero premium**, no de videojuego: sin neón, sin
-animaciones llamativas, con acentos discretos y mucho aire.
+Estética sobria de **dashboard financiero premium**: sin neón, sin animaciones llamativas,
+con acentos discretos y mucho aire. La imagen de la galaxia se ve claramente a través
+de los paneles de cristal translúcido.
 
 ### Imagen de fondo (reemplazable)
 
@@ -100,12 +151,12 @@ archivo en `assets/` y cambiar **una sola línea** al principio de `styles.css`:
 
 Justo debajo hay cuatro variables para adaptar cualquier imagen sin tocar nada más:
 
-| Variable | Qué hace |
-|---|---|
-| `--fondo-brillo` | 0 = negro · 1 = imagen original (por defecto `0.78`) |
-| `--fondo-saturacion` | Por debajo de 1 apaga el color y la vuelve más sobria |
-| `--fondo-desenfoque` | Desenfoque leve que da sensación de lejanía |
-| `--fondo-velo` | Opacidad del velo oscuro que garantiza el contraste del texto |
+| Variable | Por defecto | Qué hace |
+|---|---|---|
+| `--fondo-brillo` | `0.92` | 0 = negro · 1 = imagen original |
+| `--fondo-saturacion` | `0.88` | Por debajo de 1 apaga el color y la vuelve más sobria |
+| `--fondo-desenfoque` | `1px` | Desenfoque leve que da sensación de lejanía |
+| `--fondo-velo` | `0.38` | Opacidad del velo oscuro que garantiza el contraste del texto |
 
 Si tu imagen es más clara o más cargada que la de ejemplo, baja `--fondo-brillo` o sube
 `--fondo-velo` hasta que el texto se lea con comodidad.
@@ -115,7 +166,7 @@ Si tu imagen es más clara o más cargada que la de ejemplo, baja `--fondo-brill
 1. **`.bg-imagen`** — la imagen, fija, atenuada y con desenfoque leve.
 2. **`.bg-velo`** — velo oscuro degradado que asegura la legibilidad sobre cualquier foto.
 3. **`#starfield`** — capa de partículas animadas sobre la imagen, en canvas.
-4. **Contenido** — por encima de todo.
+4. **Contenido** — por encima de todo en `z-index: 2`.
 
 ### Partículas
 
@@ -128,25 +179,20 @@ lenta y tonos blanco frío, plata y un dorado tenue de acento.
 
 - **Superficies**: negro `#05070c`, azul marino profundo `#0b1220`, gris carbón `#141821`.
 - **Un único acento**, nunca neón: azul acero apagado `#6f8fac`, para focos de campo,
-  botones primarios, la pestaña activa y el filete de los KPIs. Sin dorado ni plata en la
-  interfaz — esos tonos quedan reservados a la capa de partículas del fondo.
+  botones primarios, la pestaña activa, el filete de los KPIs y el borde del día de hoy en el calendario.
 - **Semánticos apagados** a propósito: alza `#6fae8e`, baja `#c07b7b`.
-- **Gráficos**: el mismo azul acero para la curva principal (compuesta o capital), gris
-  neutro `#7c8698` para la curva secundaria (simple) y para los días no operables.
+- **Gráficos**: el mismo azul acero para la curva principal, gris neutro `#7c8698` para la
+  curva secundaria y para los días no operables.
 - **Tipografía**: **Inter** vía Google Fonts (pesos 300–600), con pila del sistema como
   respaldo. Cifras con `tabular-nums` para que las columnas no bailen.
 
 ### Glassmorphism y bordes
 
-Paneles y tarjetas usan fondo semitransparente con `backdrop-filter: blur(16px)` y **bordes de
-1 px casi imperceptibles** (`rgba(196,205,224,.10)`) en lugar de bordes gruesos de color. El
-único acento cromático de las tarjetas es un filete azul acero vertical de 1 px en los KPIs.
-
-### Movimiento
-
-Todas las animaciones son lentas y discretas: transiciones de 0,2 s en botones y campos, deriva
-de estrellas casi imperceptible y ningún efecto de brillo pulsante. No hay planetas ni halos de
-color: la profundidad la aporta la fotografía.
+Paneles y tarjetas usan fondo semitransparente (`rgba` con ~48 % de opacidad) con
+`backdrop-filter: blur(16px)` y **bordes de 1 px casi imperceptibles** en lugar de bordes
+gruesos de color. Esto permite ver la imagen de la galaxia a través de las tarjetas,
+creando un efecto de profundidad. El calendario usa las mismas celdas de cristal,
+con leve tinte verde o rojo según el resultado del día.
 
 ### Rendimiento
 
@@ -159,30 +205,30 @@ color: la profundidad la aporta la fotografía.
   (`visibilitychange`).
 - Respeta `prefers-reduced-motion`: las partículas se pintan **estáticas** y las transiciones
   se anulan.
-- En móvil la imagen se atenúa un punto más, para reducir el ruido tras el contenido.
 
-Interfaz tipo dashboard, **en español**, **responsive** (comprobada sin scroll horizontal a
-376 px de ancho) y en una sola página con pestañas para Crecimiento, Interés compuesto y
-Conversor.
+---
 
 ## Estructura del proyecto
 
 ```
 .
-├── index.html          # una sola página con 3 pestañas
-├── styles.css          # tema elegante, glassmorphism, responsive
+├── index.html              # una sola página con 4 pestañas
+├── styles.css              # tema galáctico, glassmorphism, responsive
 ├── assets/
 │   └── fondo-galaxia.jpg   # imagen de fondo (reemplazable, ver Diseño)
 ├── js/
-│   ├── starfield.js    # capa de partículas con parallax (canvas)
-│   ├── chart.js        # mini librería de gráficos de línea (canvas, sin CDN)
-│   ├── storage.js      # localStorage, formatos es-ES, utilidades de calendario y CSV
-│   ├── growth.js       # Sección 1 — crecimiento y contador de días del plan
-│   ├── compound.js     # Sección 2 — interés compuesto por días operables
-│   ├── fx.js           # Sección 3 — conversor de monedas
-│   └── app.js          # arranque y navegación por pestañas
+│   ├── starfield.js        # capa de partículas con parallax (canvas)
+│   ├── chart.js            # mini librería de gráficos de línea (canvas, sin CDN)
+│   ├── storage.js          # localStorage, formatos es-ES, utilidades de calendario y CSV
+│   ├── growth.js           # Sección 1 — crecimiento y contador de días del plan
+│   ├── compound.js         # Sección 2 — interés compuesto por días operables
+│   ├── fx.js               # Sección 3 — conversor de monedas
+│   ├── calendar.js         # Sección 4 — calendario mensual de trader
+│   └── app.js              # arranque y navegación por pestañas
 └── README.md
 ```
+
+---
 
 ## Uso local
 
@@ -193,6 +239,8 @@ estático para que `fetch` de las tasas funcione sin restricciones:
 python3 -m http.server 8000
 # luego abre http://localhost:8000
 ```
+
+---
 
 ## Tasas de cambio
 
@@ -215,6 +263,8 @@ En la pestaña *Conversor* puedes:
 
 Las últimas tasas descargadas quedan cacheadas en `localStorage` y se refrescan
 automáticamente si tienen más de 12 horas.
+
+---
 
 ## Publicar en GitHub Pages
 
@@ -242,6 +292,8 @@ automáticamente si tienen más de 12 horas.
 Como `index.html` está en la raíz y no hay carpetas que empiecen por `_`, no hace falta
 ni configuración de Jekyll ni archivo `.nojekyll`.
 
+---
+
 ## Notas
 
 - Todos los datos se guardan **solo en tu navegador** (`localStorage`, prefijo `kronos.v1.`).
@@ -251,5 +303,5 @@ ni configuración de Jekyll ni archivo `.nojekyll`.
   evitar el desfase de zona horaria que produce interpretar esas cadenas como UTC.
 - La única petición de red que hace el sitio es la consulta de tasas de cambio.
 - El selector de moneda de la sección *Crecimiento* afecta **solo al formato de visualización**:
-  no convierte las cifras que ya introdujiste.
+  no convierte las cifras que ya introdujiste. El calendario usa la misma moneda seleccionada.
 - La tabla del simulador muestra como máximo 500 filas por rendimiento; el CSV exporta todas.
