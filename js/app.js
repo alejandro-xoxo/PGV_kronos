@@ -4,6 +4,7 @@
   const paneles = {
     crecimiento: document.getElementById('tab-crecimiento'),
     compuesto: document.getElementById('tab-compuesto'),
+    calendario: document.getElementById('tab-calendario'),
     conversor: document.getElementById('tab-conversor')
   };
 
@@ -22,6 +23,7 @@
     // Los canvas ocultos miden 0 px: hay que redibujar al mostrarlos.
     if (nombre === 'crecimiento') Growth.render();
     if (nombre === 'compuesto') Compound.run();
+    if (nombre === 'calendario') CalTrader.render();
   }
 
   tabs.forEach(function (t) {
@@ -31,6 +33,7 @@
   Growth.init();
   Compound.init();
   FX.init();
+  CalTrader.init();
 
   const inicial = location.hash.slice(1) || Store.get('tab', 'crecimiento');
   mostrar(paneles[inicial] ? inicial : 'crecimiento');

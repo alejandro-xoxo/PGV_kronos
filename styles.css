@@ -540,6 +540,261 @@ tbody tr.row-noop td:first-child{ box-shadow: inset 2px 0 0 rgba(182, 190, 205, 
 .result__sub{ font-size: 12px; color: var(--txt-mute) }
 
 /* --------------------------------------------------------------------------
+   Calendario de Trader
+   -------------------------------------------------------------------------- */
+
+/* Cabecera del calendario: navegación + KPIs del mes */
+.cal-header{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.cal-nav{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cal-nav__titulo{
+  min-width: 180px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: var(--txt);
+}
+.cal-nav__btn{
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  background: rgba(255,255,255,0.035);
+  color: var(--txt-dim);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.cal-nav__btn:hover{
+  color: var(--txt);
+  background: rgba(255,255,255,0.07);
+  border-color: var(--borde-alto);
+}
+.cal-nav__hoy{
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 12.5px;
+  color: var(--txt-dim);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.cal-nav__hoy:hover{
+  color: var(--txt);
+  background: rgba(255,255,255,0.07);
+  border-color: var(--borde-alto);
+}
+
+/* KPIs del mes: total a la derecha + stats pequeños */
+.cal-kpis{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+  align-items: center;
+}
+.cal-kpi{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 10px 16px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.cal-kpi--total{
+  border-color: var(--borde-alto);
+  background: var(--panel-alto);
+}
+.cal-kpi__label{
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--txt-mute);
+}
+.cal-kpi__val{
+  font-size: 18px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--txt);
+}
+.cal-kpi--total .cal-kpi__val{
+  font-size: 22px;
+  font-weight: 400;
+}
+
+/* Cabecera de días de la semana */
+.cal-weekdays{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+.cal-weekday{
+  padding: 6px 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--txt-mute);
+  text-align: center;
+}
+.cal-weekday:nth-child(6),
+.cal-weekday:nth-child(7){ color: rgba(196,205,224,0.35) }
+
+/* Cuadrícula del calendario */
+.cal-grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* Celdas */
+.cal-cell{
+  position: relative;
+  min-height: 88px;
+  padding: 10px 10px 8px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: border-color .2s ease, background-color .2s ease;
+  overflow: hidden;
+}
+.cal-cell--empty{
+  background: transparent;
+  border-color: transparent;
+  pointer-events: none;
+}
+.cal-cell--futuro{
+  background: rgba(16,21,32,0.25);
+  border-color: rgba(196,205,224,0.05);
+}
+.cal-cell--sin-dato{
+  background: rgba(16,21,32,0.30);
+  border-style: dashed;
+  border-color: rgba(196,205,224,0.07);
+}
+.cal-cell--noop{
+  background: rgba(16,21,32,0.35);
+  border-color: rgba(196,205,224,0.07);
+}
+.cal-cell--pos{
+  background: rgba(111,174,142,0.10);
+  border-color: rgba(111,174,142,0.28);
+}
+.cal-cell--pos:hover{
+  background: rgba(111,174,142,0.16);
+  border-color: rgba(111,174,142,0.45);
+}
+.cal-cell--neg{
+  background: rgba(192,123,123,0.10);
+  border-color: rgba(192,123,123,0.28);
+}
+.cal-cell--neg:hover{
+  background: rgba(192,123,123,0.16);
+  border-color: rgba(192,123,123,0.45);
+}
+.cal-cell--hoy{
+  box-shadow: 0 0 0 1.5px var(--azul);
+  border-color: var(--azul) !important;
+}
+
+/* Número del día */
+.cal-cell__num{
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--txt-mute);
+  line-height: 1;
+}
+.cal-cell--hoy .cal-cell__num{
+  color: var(--azul);
+}
+
+/* Delta monetario (valor central de la celda) */
+.cal-cell__delta{
+  display: block;
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--txt);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-cell--pos .cal-cell__delta{ color: var(--alza) }
+.cal-cell--neg .cal-cell__delta{ color: var(--baja) }
+
+/* Porcentaje del día */
+.cal-cell__pct{
+  display: block;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--txt-mute);
+  white-space: nowrap;
+}
+.cal-cell--pos .cal-cell__pct{ color: rgba(111,174,142,0.7) }
+.cal-cell--neg .cal-cell__pct{ color: rgba(192,123,123,0.7) }
+
+/* Nota corta */
+.cal-cell__nota{
+  display: block;
+  font-size: 9.5px;
+  color: var(--txt-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: auto;
+}
+
+/* Etiqueta "No operable" */
+.cal-cell__noop-label{
+  display: block;
+  font-size: 9.5px;
+  color: rgba(196,205,224,0.28);
+  margin-top: auto;
+}
+
+/* Responsive: en móvil el calendario colapsa a 1 columna por día */
+@media (max-width: 700px){
+  .cal-cell{ min-height: 60px; padding: 7px 7px 5px }
+  .cal-cell__delta{ font-size: 11px }
+  .cal-nav__titulo{ min-width: 130px; font-size: 15px }
+  .cal-kpis{ margin-left: 0; width: 100% }
+  .cal-kpi{ flex: 1 1 auto }
+}
+@media (max-width: 480px){
+  .cal-grid{ gap: 3px }
+  .cal-cell{ min-height: 46px; padding: 5px 5px 4px; border-radius: 6px }
+  .cal-cell__num{ font-size: 10px }
+  .cal-cell__delta{ font-size: 9px }
+  .cal-cell__pct, .cal-cell__nota, .cal-cell__noop-label{ display: none }
+}
+
+/* --------------------------------------------------------------------------
    Pie
    -------------------------------------------------------------------------- */
 .footer{
