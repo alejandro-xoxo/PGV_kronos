@@ -1,6 +1,6 @@
 # 🪐 Kronos — Panel de crecimiento de capital
 
-> **Demo en vivo → [alejandro-xoxo.github.io/PVG_kronos](https://alejandro-xoxo.github.io/PVG_kronos/)**
+> **Demo en vivo → [alejandro-xoxo.github.io/PGV_kronos](https://alejandro-xoxo.github.io/PGV_kronos/)**
 
 Panel de control personal para seguimiento de capital de trading, con contador de días
 del plan, lógica de **días operables** y un **calendario visual mensual** de ganancias,
