@@ -7,6 +7,13 @@ del plan, lógica de **días operables** y un **calendario visual mensual** de g
 sobre un tema galáctico sobrio y elegante. Sitio **100 % estático** (HTML + CSS + JavaScript puro),
 **sin build, sin npm y sin dependencias externas**: listo para publicar en GitHub Pages tal cual.
 
+> **Origen del proyecto**: `PVG_kronos` nació como una herramienta **independiente y
+> genérica** de seguimiento de capital, sin relación con ningún bot en particular.
+> Después se sumó como herramienta complementaria de
+> [Kronos_Bot](https://github.com/alejandro-xoxo/Kronos_Bot.git) (bot de trading
+> automatizado de Telegram a MT4) — ver la sección [Proyectos relacionados](#-proyectos-relacionados-y-documentación-interna)
+> más abajo para el detalle de esa integración.
+
 ---
 
 ## Contenido
@@ -310,7 +317,11 @@ ni configuración de Jekyll ni archivo `.nojekyll`.
 
 ## 🔗 Proyectos Relacionados y Documentación Interna
 
-- **[Documentación de Integración Futura](docs/INTEGRACION_KRONOS_BOT.md)**: Plan técnico de arquitectura para la futura integración con backend PostgreSQL y motor de trading.
-- **[Kronos_Bot (GitHub)](https://github.com/alejandro-xoxo/Kronos_Bot.git)**: Bot personal de trading automatizado de Telegram a MT4 con n8n y Python.
+`PVG_kronos` se desarrolló como herramienta genérica e independiente (no fue creada
+como parte de ningún bot); esta sección documenta su integración posterior como
+herramienta externa adicionada al proyecto **Kronos_Bot**.
+
+- **[Documentación de Integración](docs/INTEGRACION_KRONOS_BOT.md)**: Plan técnico de arquitectura para la integración con el backend PostgreSQL y el motor de trading de Kronos_Bot.
+- **[Kronos_Bot (GitHub)](https://github.com/alejandro-xoxo/Kronos_Bot.git)**: Bot personal de trading automatizado de Telegram a MT4 con n8n y Python — el proyecto al que se le suma `PVG_kronos` como panel de control.
 
 

@@ -1,12 +1,18 @@
 # 🗺️ Hoja de Ruta e Integración con Kronos_Bot
 
-Documento de diseño y arquitectura para la futura integración entre **PVG_kronos** (Panel Frontend) y **Kronos_Bot** (Backend/Motor de Ejecución).
+Documento de diseño y arquitectura para la integración entre **PVG_kronos** (Panel Frontend) y **Kronos_Bot** (Backend/Motor de Ejecución).
+
+**Nota de origen**: `PVG_kronos` es una herramienta externa e independiente,
+desarrollada sin relación con ningún bot en particular — no nació como parte de
+`Kronos_Bot`. Este documento describe su **integración posterior** como
+herramienta complementaria que se le adiciona al proyecto `Kronos_Bot`, no un
+plan de diseño conjunto desde el origen de ambos.
 
 ---
 
 ## 🎯 Objetivo
 
-Reemplazar la interfaz básica del dashboard de `Kronos_Bot` por esta interfaz galáctica (`PVG_kronos`) y conectar los datos en tiempo real mediante PostgreSQL y FastAPI/Flask, permitiendo sincronización multi-dispositivo vía Ngrok con autenticación segura.
+Reemplazar la interfaz básica del dashboard de `Kronos_Bot` por esta interfaz galáctica (`PVG_kronos`, herramienta externa adicionada al proyecto) y conectar los datos en tiempo real mediante PostgreSQL y FastAPI/Flask, permitiendo sincronización multi-dispositivo vía Ngrok con autenticación segura.
 
 ---
 
