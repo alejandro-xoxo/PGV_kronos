@@ -35,6 +35,7 @@
     <button class="tab is-active" role="tab" data-tab="crecimiento" aria-selected="true">Crecimiento</button>
     <button class="tab" role="tab" data-tab="compuesto" aria-selected="false">Interés compuesto</button>
     <button class="tab" role="tab" data-tab="calendario" aria-selected="false">Calendario</button>
+    <button class="tab" role="tab" data-tab="control" aria-selected="false">Panel de control</button>
     <button class="tab" role="tab" data-tab="conversor" aria-selected="false">Conversor</button>
   </nav>
 </header>
@@ -301,6 +302,44 @@
   </div>
 </section>
 
+<!-- ===================== PANEL DE CONTROL ===================== -->
+<section class="panel-group hidden" id="tab-control" role="tabpanel">
+
+  <div class="demo-banner">
+    <strong>Panel de demostración.</strong> Estas posiciones son datos de ejemplo
+    generados en el navegador — no hay conexión a ninguna cuenta ni bróker real.
+    Pensado para mostrar cómo se ve el control operativo en vivo.
+  </div>
+
+  <div class="section-title-row">
+    <h2 class="section-title">Perfil de cuenta activo</h2>
+  </div>
+  <div class="card">
+    <p class="hint" style="margin-top:0">Selector de cuenta del EA (solo demostrativo acá).</p>
+    <div class="segmented" id="control-segmented">
+      <button class="segmented__btn is-active" data-profile="DEMO_VIP">Demo · DEMO_VIP</button>
+      <button class="segmented__btn" data-profile="PROD_STD">Real · PROD_STD</button>
+    </div>
+  </div>
+
+  <div class="section-title-row">
+    <h2 class="section-title">Posiciones abiertas</h2>
+    <span class="section-count" id="control-count">—</span>
+  </div>
+  <div class="positions" id="control-positions"></div>
+  <p class="empty" id="control-empty" style="display:none">No hay posiciones abiertas en este momento.</p>
+
+  <div class="section-title-row">
+    <h2 class="section-title">Capital de la cuenta (demo)</h2>
+  </div>
+  <div class="kpis kpis--inline">
+    <div class="kpi"><span class="kpi__label">Balance</span><strong id="control-balance">—</strong></div>
+    <div class="kpi"><span class="kpi__label">Equity</span><strong id="control-equity">—</strong></div>
+    <div class="kpi"><span class="kpi__label">P&amp;L flotante</span><strong id="control-floating">—</strong></div>
+  </div>
+
+</section>
+
 <!-- ===================== CALENDARIO ===================== -->
 <section class="panel-group hidden" id="tab-calendario" role="tabpanel">
 
@@ -362,6 +401,7 @@
 <script src="js/compound.js"></script>
 <script src="js/fx.js"></script>
 <script src="js/calendar.js"></script>
+<script src="js/control.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

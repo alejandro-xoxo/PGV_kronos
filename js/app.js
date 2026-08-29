@@ -5,6 +5,7 @@
     crecimiento: document.getElementById('tab-crecimiento'),
     compuesto: document.getElementById('tab-compuesto'),
     calendario: document.getElementById('tab-calendario'),
+    control: document.getElementById('tab-control'),
     conversor: document.getElementById('tab-conversor')
   };
 
@@ -24,6 +25,7 @@
     if (nombre === 'crecimiento') Growth.render();
     if (nombre === 'compuesto') Compound.run();
     if (nombre === 'calendario') CalTrader.render();
+    if (nombre === 'control') ControlPanel.render();
   }
 
   tabs.forEach(function (t) {
@@ -34,6 +36,7 @@
   Compound.init();
   FX.init();
   CalTrader.init();
+  ControlPanel.init();
 
   const inicial = location.hash.slice(1) || Store.get('tab', 'crecimiento');
   mostrar(paneles[inicial] ? inicial : 'crecimiento');

@@ -813,6 +813,110 @@ tbody tr.row-noop td:first-child{ box-shadow: inset 2px 0 0 rgba(182, 190, 205, 
 }
 
 /* --------------------------------------------------------------------------
+   Panel de control (demo)
+   -------------------------------------------------------------------------- */
+.demo-banner{
+  border: 1px solid var(--borde-alto);
+  background: linear-gradient(150deg, rgba(199, 122, 17, 0.12), rgba(199, 122, 17, 0.04));
+  color: var(--txt-dim);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.demo-banner strong{ color: var(--txt) }
+
+.section-title-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 26px 0 12px;
+}
+.section-title-row:first-of-type{ margin-top: 0 }
+.section-title{
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--txt-mute);
+  margin: 0;
+}
+.section-count{ font-size: 12px; color: var(--txt-dim) }
+
+.segmented{
+  display: flex;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+}
+.segmented__btn{
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--txt-dim);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 12px;
+  min-height: 42px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s ease, color .15s ease;
+}
+.segmented__btn.is-active{
+  background: rgba(255,255,255,0.06);
+  color: var(--azul);
+  box-shadow: inset 0 0 0 1px var(--borde-alto);
+}
+
+.positions{ display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px }
+.ctrl-card{
+  background: rgba(255,255,255,0.035);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--borde-alto);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+}
+.ctrl-card.is-profit{ border-left-color: var(--alza) }
+.ctrl-card.is-loss{ border-left-color: var(--baja) }
+
+.ctrl-top{ display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px }
+.ctrl-instrument{ display: flex; align-items: center; gap: 8px }
+.ctrl-symbol{ font-size: 17px; font-weight: 700; letter-spacing: -0.01em; color: var(--txt) }
+.ctrl-dir{ font-size: 10px; font-weight: 700; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 6px; text-transform: uppercase }
+.ctrl-dir.dir-buy{ background: rgba(111, 174, 142, 0.16); color: var(--alza) }
+.ctrl-dir.dir-sell{ background: rgba(192, 123, 123, 0.16); color: var(--baja) }
+
+.ctrl-profit-block{ text-align: right; flex-shrink: 0 }
+.ctrl-profit{ font-variant-numeric: tabular-nums; font-size: 19px; font-weight: 700 }
+.ctrl-profit.pos{ color: var(--alza) }
+.ctrl-profit.neg{ color: var(--baja) }
+.ctrl-ticket{ font-size: 11px; color: var(--txt-mute); margin-top: 2px }
+
+.ctrl-meta{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
+  margin-bottom: 14px;
+}
+.ctrl-meta-item{ display: flex; flex-direction: column; gap: 2px; min-width: 0 }
+.ctrl-meta-item span{ font-size: 10px; color: var(--txt-mute); text-transform: uppercase; letter-spacing: 0.06em }
+.ctrl-meta-item strong{ font-variant-numeric: tabular-nums; font-size: 13px; color: var(--txt) }
+.ctrl-meta-item strong.pos{ color: var(--alza) }
+.ctrl-meta-item strong.neg{ color: var(--baja) }
+
+.ctrl-actions{ display: flex; gap: 8px }
+.ctrl-actions .btn{ flex: 1; min-height: 44px }
+.ctrl-status{ margin: 10px 0 0; font-size: 12px; color: var(--txt-mute); min-height: 1em }
+
+/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 560px){
@@ -826,6 +930,7 @@ tbody tr.row-noop td:first-child{ box-shadow: inset 2px 0 0 rgba(182, 190, 205, 
   .dayband__stats{ width: 100% }
   .dayband__stats > div{ flex: 1 1 calc(50% - 5px); min-width: 0; padding: 10px 12px }
   .dow__item{ flex: 1 1 calc(33.333% - 5px); justify-content: center; padding: 9px 6px }
+  .ctrl-meta{ grid-template-columns: repeat(2, 1fr) }
   .chart-wrap{ height: 250px }
   /* En móvil el fondo se atenúa levemente más: equilibrio entre visual e inmersión */
   .bg-imagen{ filter: brightness(.78) saturate(.82) blur(2px) }
